@@ -14,6 +14,8 @@ function setConnected(connected) {
 
 function connect() {
     var socket = new SockJS('/ws');
+    console.log("Number users below");
+    console.log(socket.clients.size());
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
