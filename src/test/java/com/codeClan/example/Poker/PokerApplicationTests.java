@@ -30,7 +30,7 @@ public class PokerApplicationTests {
 //	 Card card7;
 
 
-	Table table1;
+	GameTable gameTable1;
 	List<Player> players = new ArrayList<>();
 	List<Card> board1 = new ArrayList<>();
 
@@ -60,8 +60,8 @@ public class PokerApplicationTests {
 		 hand1.add(card1);
 		 hand1.add(card2);
 
-		 player1 = new Player("iain",1000, hand1);
-		 player2 = new Player("alex",900, hand1);
+		 player1 = new Player("iain",1000, "iain123","1234");
+		 player2 = new Player("alex",900, "alex123","4321");
 
 		 board1 = new ArrayList<>();
 		 board1.add(card1);
@@ -70,7 +70,7 @@ public class PokerApplicationTests {
 		 players = new ArrayList<>();
 		 players.add(player1);
 		 players.add(player2);
-		 table1 = new Table(2000,players, board1);
+		 gameTable1 = new GameTable(2000,players, board1);
 	}
 	@Test
 	public void contextLoads() {
@@ -125,8 +125,8 @@ public class PokerApplicationTests {
 	@Test
 	public void playerCanAddToPot(){
 		player1.removeFromStack(20);
-		table1.addToPot(20);
-		assertEquals(2020,table1.getPot(),0.0);
+		gameTable1.addToPot(20);
+		assertEquals(2020, gameTable1.getPot(),0.0);
 	}
 
 //	deck tests
@@ -146,28 +146,28 @@ public class PokerApplicationTests {
 
 	@Test
 	public void tableHasPot(){
-		assertEquals(2000,table1.getPot(),0.0);
+		assertEquals(2000, gameTable1.getPot(),0.0);
 	}
 	@Test
 	public void tableHasPlayers(){
-		assertEquals(2,table1.getPlayers().size());
+		assertEquals(2, gameTable1.getPlayers().size());
 	}
 
 	@Test
 	public void tableHasBoard(){
-		assertEquals(2,table1.getBoard().size());
+		assertEquals(2, gameTable1.getBoard().size());
 	}
 
 	@Test
 	public void canAddToPot(){
-		table1.addToPot(20);
-		assertEquals(2020,table1.getPot(),0.0);
+		gameTable1.addToPot(20);
+		assertEquals(2020, gameTable1.getPot(),0.0);
 	}
 
 	@Test
 	public void canResetPot(){
-		table1.resetPot();
-		assertEquals(0,table1.getPot(),0.0);
+		gameTable1.resetPot();
+		assertEquals(0, gameTable1.getPot(),0.0);
 	}
 
 }

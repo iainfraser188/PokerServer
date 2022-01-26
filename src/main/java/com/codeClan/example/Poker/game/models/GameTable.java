@@ -2,13 +2,13 @@ package com.codeClan.example.Poker.game.models;
 
 import java.util.List;
 
-public class Table {
+public class GameTable {
 
     private double pot;
     private List<Player> players;
     private List<Card> board;
 
-    public Table(double pot, List<Player> players,List<Card>board) {
+    public GameTable(double pot, List<Player> players, List<Card>board) {
         this.pot = pot;
         this.players = players;
         this.board = board;
