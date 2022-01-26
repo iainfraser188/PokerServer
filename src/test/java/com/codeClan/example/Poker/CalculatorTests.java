@@ -28,6 +28,7 @@ public class CalculatorTests {
     Card nine1;
     Card nine2;
     Card eight1;
+    Card seven1;
     List<Card> cards;
     List<Card> cards2;
     List<Card> cards3;
@@ -35,6 +36,8 @@ public class CalculatorTests {
     List<Card> cards5;
     List<Card> cards6;
     List<Card> cards7;
+    List<Card> cards8;
+    List<Card> cards9;
     PlayerHand hand1;
     PlayerHand hand2;
     PlayerHand hand3;
@@ -42,6 +45,8 @@ public class CalculatorTests {
     PlayerHand hand5;
     PlayerHand hand6;
     PlayerHand hand7;
+    PlayerHand hand8;
+    PlayerHand hand9;
     HandCalculator calc;
 
 
@@ -62,6 +67,7 @@ public class CalculatorTests {
         nine1 = new Card(CardSuitType.CLUBS, CardFace.NINE);
         nine2 = new Card(CardSuitType.HEARTS, CardFace.NINE);
         eight1 = new Card(CardSuitType.CLUBS, CardFace.EIGHT);
+        seven1 = new Card(CardSuitType.HEARTS, CardFace.SEVEN);
         cards = new ArrayList<>();
         cards.add(ace1);
         cards.add(ace2);
@@ -118,6 +124,22 @@ public class CalculatorTests {
         cards7.add(ten2);
         cards7.add(nine1);
         cards7.add(eight1);
+        cards8 = new ArrayList<>();
+        cards8.add(ace3);
+        cards8.add(king1);
+        cards8.add(queen2);
+        cards8.add(nine2);
+        cards8.add(eight1);
+        cards8.add(ten1);
+        cards8.add(seven1);
+        cards9 = new ArrayList<>();
+        cards9.add(ace3);
+        cards9.add(ace1);
+        cards9.add(ace2);
+        cards9.add(nine2);
+        cards9.add(eight1);
+        cards9.add(ten1);
+        cards9.add(seven1);
         calc = new HandCalculator();
         hand1 = new PlayerHand(cards);
         hand2 = new PlayerHand(cards2);
@@ -126,6 +148,8 @@ public class CalculatorTests {
         hand5 = new PlayerHand(cards5);
         hand6 = new PlayerHand(cards6);
         hand7 = new PlayerHand(cards7);
+        hand8 = new PlayerHand(cards8);
+        hand9 = new PlayerHand(cards9);
     }
 
     @Test
@@ -165,12 +189,12 @@ public class CalculatorTests {
 
     @Test
     public void canDetermineFlush() {
-        assertEquals(12, calc.isFlush(hand7));
+        assertEquals(12, calc.isFlush(hand7).get("value"));
     }
 
     @Test
     public void canDetermineNotFlush() {
-        assertEquals(0, calc.isFlush(hand1));
+        assertEquals(0, calc.isFlush(hand1).get("value"));
     }
 
     @Test
@@ -186,5 +210,50 @@ public class CalculatorTests {
     @Test
     public void canDetermineStraightAceHigh() {
         assertEquals(14, calc.isStraight(hand6));
+    }
+
+    @Test
+    public void canDetermineStraightFlush() {
+        assertEquals(12, calc.isStraightFlush(hand7));
+    }
+
+    @Test
+    public void canDetermineNotStraightFlushwithStriaght() {
+        assertEquals(0, calc.isStraightFlush(hand6));
+    }
+
+    @Test
+    public void canDetermineNotStraightFlushWithFLush() {
+        assertEquals(0, calc.isStraightFlush(hand8));
+    }
+
+    @Test
+    public void canDetermineFullHouse() {
+        assertEquals(14, calc.isFullHouse(hand2));
+    }
+
+    @Test
+    public void canDetermineNotFullHouse(){
+        assertEquals(0, calc.isFullHouse(hand4));
+    }
+
+    @Test
+    public void canDetermineNotFullHouseWhenTripsOnly(){
+        assertEquals(0, calc.isFullHouse(hand9));
+    }
+
+    @Test
+    public void canDetermineTwoPair() {
+        assertEquals(14, calc.isTwoPair(hand4));
+    }
+
+    @Test
+    public void canDetermineNotTwoPairWithSinglePair() {
+        assertEquals(0, calc.isTwoPair(hand7));
+    }
+
+    @Test
+    public void canReturnHighCard() {
+        assertEquals(12, calc.highCard(hand5));
     }
 }
