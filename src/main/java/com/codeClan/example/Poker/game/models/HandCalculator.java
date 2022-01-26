@@ -98,7 +98,7 @@ public class HandCalculator {
         }
 
         // Needs getIntValue added properly and sort function set up
-        if (hearts.size() >= 4){
+        if (hearts.size() >= 5){
             Collections.sort(hearts, Comparator.comparingInt(card -> card.getCardValue().getValue()));
             int size = hearts.size();
             int highest = hearts.get(size-1).getCardValue().getValue();
@@ -106,7 +106,7 @@ public class HandCalculator {
             if(hearts.get(0).getCardValue().getValue() == 1){
                 value = 14;
             }
-        } else if (diamonds.size() >= 4){
+        } else if (diamonds.size() >= 5){
             Collections.sort(diamonds, Comparator.comparingInt(card -> card.getCardValue().getValue()));
             int size = diamonds.size();
             int highest = diamonds.get(size-1).getCardValue().getValue();
@@ -114,7 +114,7 @@ public class HandCalculator {
             if(diamonds.get(0).getCardValue().getValue() == 1){
                 value = 14;
             }
-        } else if (clubs.size() >= 4){
+        } else if (clubs.size() >= 5){
             Collections.sort(clubs, Comparator.comparingInt(card -> card.getCardValue().getValue()));
             int size = clubs.size();
             int highest = clubs.get(size-1).getCardValue().getValue();
@@ -122,7 +122,7 @@ public class HandCalculator {
             if(clubs.get(0).getCardValue().getValue() == 1){
                 value = 14;
             }
-        } else if (spades.size() >= 4) {
+        } else if (spades.size() >= 5) {
             Collections.sort(spades, Comparator.comparingInt(card -> card.getCardValue().getValue()));
             int size = spades.size();
             int highest = spades.get(size-1).getCardValue().getValue();
@@ -140,7 +140,7 @@ public class HandCalculator {
         Collections.sort(cards, Comparator.comparingInt(card -> card.getCardValue().getValue()));
         int consecutive = 1;
         int straight = 0;
-        for (int i = 0; i < cards.size() - 4; i++) {
+        for (int i = 0; i < cards.size() - 1; i++) {
             if(cards.get(i).getCardValue().getValue() + 1 == cards.get(i+1).getCardValue().getValue()) {
                 consecutive++;
                 if (consecutive > 4) {
@@ -153,7 +153,7 @@ public class HandCalculator {
             }
         }
 
-        if(consecutive >= 4 && cards.get(0).getCardValue().getValue() == 1) {
+        if(consecutive >= 4 && cards.get(0).getCardValue().getValue() == 1 && cards.get(6).getCardValue().getValue() == 13) {
             straight = 14;
         }
 
