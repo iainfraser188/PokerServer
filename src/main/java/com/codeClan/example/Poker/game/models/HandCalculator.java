@@ -227,10 +227,108 @@ public class HandCalculator {
     public int highCard(PlayerHand playerHand1) {
         List<Card> cards1 = playerHand1.getPlayerCards();
         Collections.sort(cards1, Comparator.comparingInt(card -> card.getCardValue().getValue()));
-
+        if(cards1.get(0).getCardValue() == CardFace.ACE){
+            cards1.get(0).setCardValue(CardFace.ACEHIGH);
+            Collections.sort(cards1, Comparator.comparingInt(card -> card.getCardValue().getValue()));
+        }
         return cards1.get(6).getCardValue().getValue();
     }
 
+    public PlayerHand overall(PlayerHand playerHand1, PlayerHand playerHand2) {
 
+        int value1;
+        int value2;
+
+        value1 = isStraightFlush(playerHand1);
+        value2 = isStraightFlush(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isFourOfAKind(playerHand1);
+        value2 = isFourOfAKind(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isFullHouse(playerHand1);
+        value2 = isFullHouse(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = (int) isFlush(playerHand1).get("value");
+        value2 = (int) isFlush(playerHand2).get("value");
+
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isStraight(playerHand1);
+        value2 = isStraight(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isThreeOfAKind(playerHand1);
+        value2 = isThreeOfAKind(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isTwoPair(playerHand1);
+        value2 = isTwoPair(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isPair(playerHand1);
+        value2 = isPair(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = highCard(playerHand1);
+        value2 = highCard(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        }
+
+        return null;
+    }
 
 }
