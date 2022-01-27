@@ -96,4 +96,8 @@ public class Player {
         return this.stack -= amount;
     }
 
+    public void addCard(Card card){
+        this.hand.add(card);
+    }
+
 }

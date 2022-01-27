@@ -62,6 +62,8 @@ public class PokerApplicationTests {
 
 		 player1 = new Player("iain",1000, "iain123","1234");
 		 player2 = new Player("alex",900, "alex123","4321");
+		 player1.addCard(card1);
+		 player1.addCard(card2);
 
 		 board1 = new ArrayList<>();
 		 board1.add(card1);
