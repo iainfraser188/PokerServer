@@ -231,6 +231,6 @@ public class HandCalculator {
         return cards1.get(6).getCardValue().getValue();
     }
 
-    
+
 
 }
