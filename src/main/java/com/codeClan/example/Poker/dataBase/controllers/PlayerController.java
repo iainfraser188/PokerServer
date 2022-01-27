@@ -25,6 +25,7 @@ public class PlayerController {
     public ResponseEntity<Optional<Player>>getPlayer(@PathVariable Long id){
         Optional<Player> payload = playerRepository.findById(id);
         if(payload.isPresent()){
+            payload.get().setPassword(null);
             return new ResponseEntity<>(payload,HttpStatus.OK);
         }
         else {
