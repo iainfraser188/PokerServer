@@ -1,4 +1,4 @@
-package com.codeClan.example.Poker.webSocket.controller;
+package com.codeClan.example.Poker.webSocketTesting.controller;
 
 import lombok.Builder;
 import lombok.Getter;

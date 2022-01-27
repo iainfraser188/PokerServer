@@ -32,6 +32,20 @@ public class PlayerController {
         }
     }
 
+    @GetMapping(value = "/login")
+    public ResponseEntity<Optional<Long>> validateLogin(
+            @RequestParam(required = true, name ="username") String username,
+            @RequestParam(required = true, name= "password") String password
+    ) {
+        Optional<Player> player = playerRepository.findPlayerByUsernameAndPassword(username, password);
+        if (player.isPresent()) {
+            Optional<Long> id = Optional.ofNullable(player.get().getId());
+            return new ResponseEntity<>(id, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping(value = "/players")
     public ResponseEntity<Player>postPlayer(@RequestBody Player player){
         playerRepository.save(player);
