@@ -38,6 +38,10 @@ public class GameTable {
         this.board = board;
     }
 
+    public void addCardToBoard(Card card) {
+        this.board.add(card);
+    }
+
     public void addToPot(double amount) {
         this.pot += amount;
     }
