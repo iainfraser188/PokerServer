@@ -36,7 +36,7 @@ public class Dealer {
         Card card3 = deck.dealCard();
         this.gameTable.addCardToBoard(card1);
         this.gameTable.addCardToBoard(card2);
-        this.gameTable.addCardToBoard().add(card3);
+        this.gameTable.addCardToBoard(card3);
     }
 
     public void dealPostFlop() {
@@ -44,3 +44,5 @@ public class Dealer {
         this.gameTable.addCardToBoard(card);
     }
 }
+
+

@@ -28,6 +28,21 @@ public class Player {
     @Transient
     private List<Card> hand;
 
+    @Transient
+    private boolean isBigBlind;
+
+    @Transient
+    private boolean isSmallBlind;
+
+    @Transient
+    private boolean isActive;
+
+    @Transient
+    private double contribution;
+
+    @Transient
+    private boolean folded;
+
     public Player() {
     }
 
@@ -37,7 +52,11 @@ public class Player {
         this.username = username;
         this.password = password;
         this.hand = new ArrayList<Card>();
-
+        this.isBigBlind = false;
+        this.isSmallBlind = false;
+        this.isActive = false;
+        this.contribution = 0;
+        this.folded = false;
     }
 
     public String getName() {
@@ -99,5 +118,85 @@ public class Player {
     public void addCard(Card card){
         this.hand.add(card);
     }
+
+    public boolean isBigBlind() {
+        return isBigBlind;
+    }
+
+    public void setBigBlind(boolean bigBlind) {
+        isBigBlind = bigBlind;
+    }
+
+    public boolean isSmallBlind() {
+        return isSmallBlind;
+    }
+
+    public void setSmallBlind(boolean smallBlind) {
+        isSmallBlind = smallBlind;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean getFolded() {
+        return this.folded;
+    }
+
+    public void setFolded(Boolean folded) {
+        this.folded = folded;
+    }
+
+    public void increaseContribution(double amount){
+        double contributionAmount = this.getContribution() + amount;
+        setContribution(contributionAmount);
+    }
+
+    public double getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(double contribution) {
+        this.contribution = contribution;
+    }
+
+    public boolean checkStackEnough(double betSize) {
+        if (this.stack >= betSize) {
+            return  true;
+        }
+        return false;
+    }
+
+    public void bet(double betSize) {
+        if (this.checkStackEnough(betSize)) {
+            this.removeFromStack(betSize);
+            this.increaseContribution(betSize);
+            this.setActive(false);
+        } else {
+            this.fold();
+        }
+    }
+
+    public void call(double largestContribution) {
+        double amountToCall = largestContribution - this.getContribution();
+        if (this.checkStackEnough(amountToCall)) {
+            this.removeFromStack(amountToCall);
+            this.increaseContribution(amountToCall);
+            this.setActive(false);
+        } else {
+            this.fold();
+        }
+    }
+
+    public void fold() {
+        System.out.println("Folded");
+        this.setActive(false);
+        this.setFolded(true);
+    }
+
 
 }

@@ -72,7 +72,7 @@ public class PokerApplicationTests {
 		 players = new ArrayList<>();
 		 players.add(player1);
 		 players.add(player2);
-		 gameTable1 = new GameTable(2000,players, board1);
+		 gameTable1 = new GameTable(2000,players, board1,50);
 	}
 	@Test
 	public void contextLoads() {
