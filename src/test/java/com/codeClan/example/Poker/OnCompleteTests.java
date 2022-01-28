@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 public class OnCompleteTests {
 
     GameTable gameTable;
+    GameTable gameTable2;
     Player player1;
     Player player2;
     Player player3;
@@ -47,6 +48,7 @@ public class OnCompleteTests {
     PlayerHand hand3;
     Deck deck1;
     List<Player> players1;
+    List<Player> players2;
     ArrayList<Card> board1;
     ArrayList<PlayerHand> hands;
     ArrayList<PlayerHand> hands2;
@@ -98,9 +100,11 @@ public class OnCompleteTests {
         hand2 = new PlayerHand(cards3, "Player2");
         hand3 = new PlayerHand(cards4, "Player3");
         players1 = new ArrayList<>(Arrays.asList(player1, player2, player3));
+        players2 = new ArrayList<>(Arrays.asList(player1));
         board1 = new ArrayList<>();
         board1.addAll(cards);
         gameTable = new GameTable(30, players1, board1,40.0);
+        gameTable2 = new GameTable(30, players2, board1, 40.0);
         deck1 = new Deck();
         gameEnd = new GameEnd();
         hands = new ArrayList<>();
@@ -135,6 +139,12 @@ public class OnCompleteTests {
 
     @Test
     public void canRunOverall() {
+        gameEnd.onComplete(gameTable);
+        assertEquals(130.0, player1.getStack(), 0.0);
+    }
+
+    @Test
+    public void canRunOverallWithOneRemaining() {
         gameEnd.onComplete(gameTable);
         assertEquals(130.0, player1.getStack(), 0.0);
     }
