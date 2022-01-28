@@ -165,17 +165,17 @@ public class CalculatorTests {
         cards11.add(four1);
         cards11.add(five1);
         calc = new HandCalculator();
-        hand1 = new PlayerHand(cards);
-        hand2 = new PlayerHand(cards2);
-        hand3 = new PlayerHand(cards3);
-        hand4 = new PlayerHand(cards4);
-        hand5 = new PlayerHand(cards5);
-        hand6 = new PlayerHand(cards6);
-        hand7 = new PlayerHand(cards7);
-        hand8 = new PlayerHand(cards8);
-        hand9 = new PlayerHand(cards9);
-        hand10 = new PlayerHand(cards10);
-        hand11 = new PlayerHand(cards11);
+        hand1 = new PlayerHand(cards, "");
+        hand2 = new PlayerHand(cards2, "");
+        hand3 = new PlayerHand(cards3, "");
+        hand4 = new PlayerHand(cards4, "");
+        hand5 = new PlayerHand(cards5, "");
+        hand6 = new PlayerHand(cards6, "");
+        hand7 = new PlayerHand(cards7, "");
+        hand8 = new PlayerHand(cards8, "");
+        hand9 = new PlayerHand(cards9, "");
+        hand10 = new PlayerHand(cards10, "");
+        hand11 = new PlayerHand(cards11, "");
     }
 
     @Test
