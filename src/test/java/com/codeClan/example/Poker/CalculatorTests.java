@@ -29,6 +29,8 @@ public class CalculatorTests {
     Card nine2;
     Card eight1;
     Card seven1;
+    Card four1;
+    Card five1;
     List<Card> cards;
     List<Card> cards2;
     List<Card> cards3;
@@ -38,6 +40,8 @@ public class CalculatorTests {
     List<Card> cards7;
     List<Card> cards8;
     List<Card> cards9;
+    List<Card> cards10;
+    List<Card> cards11;
     PlayerHand hand1;
     PlayerHand hand2;
     PlayerHand hand3;
@@ -47,6 +51,8 @@ public class CalculatorTests {
     PlayerHand hand7;
     PlayerHand hand8;
     PlayerHand hand9;
+    PlayerHand hand10;
+    PlayerHand hand11;
     HandCalculator calc;
 
 
@@ -68,6 +74,8 @@ public class CalculatorTests {
         nine2 = new Card(CardSuitType.HEARTS, CardFace.NINE);
         eight1 = new Card(CardSuitType.CLUBS, CardFace.EIGHT);
         seven1 = new Card(CardSuitType.HEARTS, CardFace.SEVEN);
+        four1 = new Card(CardSuitType.DIAMONDS, CardFace.FOUR);
+        five1 = new Card(CardSuitType.DIAMONDS, CardFace.FIVE);
         cards = new ArrayList<>();
         cards.add(ace1);
         cards.add(ace2);
@@ -140,6 +148,22 @@ public class CalculatorTests {
         cards9.add(eight1);
         cards9.add(ten1);
         cards9.add(seven1);
+        cards10 = new ArrayList<>();
+        cards10.add(eight1);
+        cards10.add(seven1);
+        cards10.add(ace3);
+        cards10.add(queen2);
+        cards10.add(king1);
+        cards10.add(four1);
+        cards10.add(five1);
+        cards11 = new ArrayList<>();
+        cards11.add(eight1);
+        cards11.add(seven1);
+        cards11.add(jack1);
+        cards11.add(queen2);
+        cards11.add(king1);
+        cards11.add(four1);
+        cards11.add(five1);
         calc = new HandCalculator();
         hand1 = new PlayerHand(cards);
         hand2 = new PlayerHand(cards2);
@@ -150,6 +174,8 @@ public class CalculatorTests {
         hand7 = new PlayerHand(cards7);
         hand8 = new PlayerHand(cards8);
         hand9 = new PlayerHand(cards9);
+        hand10 = new PlayerHand(cards10);
+        hand11 = new PlayerHand(cards11);
     }
 
     @Test
@@ -256,4 +282,60 @@ public class CalculatorTests {
     public void canReturnHighCard() {
         assertEquals(12, calc.highCard(hand5));
     }
+
+    @Test
+    public void canCompareStraightFlushAndNot() {
+        assertEquals(hand7, calc.overall(hand7, hand2));
+    }
+
+    @Test
+    public void canCompareStraightFlushAndFullHouse() {
+        assertEquals(hand7, calc.overall(hand7, hand6));
+    }
+
+    @Test
+    public void canCompareStraightFlushAndFourOfAKind() {
+        assertEquals(hand7, calc.overall(hand7, hand1));
+    }
+
+    @Test
+    public void canCompareFullHouseAndNot() {
+        assertEquals(hand2, calc.overall(hand6, hand2));
+    }
+
+    @Test
+    public void canCompareFlushAndNot() {
+        assertEquals(hand7, calc.overall(hand7, hand5));
+    }
+
+    @Test
+    public void canCompareFourOfAKindAndNot() {
+        assertEquals(hand1, calc.overall(hand1, hand5));
+    }
+
+    @Test
+    public void canCompareTripsAndNot() {
+        assertEquals(hand2, calc.overall(hand2, hand5));
+    }
+
+    @Test
+    public void canCompareTwoPairAndNot() {
+        assertEquals(hand4, calc.overall(hand5, hand4));
+    }
+
+    @Test
+    public void canComparePairAndNot() {
+        assertEquals(hand5, calc.overall(hand5, hand10));
+    }
+
+    @Test
+    public void canCompareHighCardsEqual() {
+        assertEquals(null, calc.overall(hand10, hand10));
+    }
+
+    @Test
+    public void canCompareHighCardsNotEqual() {
+        assertEquals(hand10, calc.overall(hand11, hand10));
+    }
 }
+
