@@ -18,6 +18,7 @@ public class PostFlopBetting {
     public PostFlopBetting(List<Player> players, double pot) {
         this.players = players;
         this.pot = pot;
+        this.complete = false;
     }
 
     public List<Player> getPlayers() {
@@ -54,15 +55,25 @@ public class PostFlopBetting {
 
 //    game methods
 
+    int activeIndex = 0;
+
 
     public void setFirstPlayerToActive() {
-        int smallBlindIndex = 0;
         for (Player player: this.players) {
             if (player.isSmallBlind()) {
-                smallBlindIndex = this.players.indexOf(player);
+                activeIndex = this.players.indexOf(player);
             }
         }
-        players.get(smallBlindIndex).setActive(true);
+        players.get(activeIndex).setActive(true);
+    }
+
+
+    public void checkNotSinglePlayerRemaining(){
+        //Method for setting complete to true if all else folded
+    }
+
+    public void setNextUnfoldedToActive(){
+        // Method for setting next active player
     }
 
     public void setUpRound() {
@@ -74,8 +85,29 @@ public class PostFlopBetting {
         setFirstPlayerToActive();
     }
 
+    public void checkIfEnded() {
+        if(checkContributionsAreSame()) {
+            this.complete = true;
+        } else {
+            if(activeIndex == players.size() - 1) {
+                players.get(0).setActive(true);
+            } else {
+                players.get(activeIndex + 1).setActive(true);
+            }
+        }
+    }
+
 
     public void Betting() {
+
+        setUpRound();
+
+        // First player bets/folds
+
+        checkIfEnded();
+
+
+
 
 
 
@@ -195,7 +227,5 @@ public class PostFlopBetting {
         }
         return playersAreSame;
     }
-
-
 
 }
