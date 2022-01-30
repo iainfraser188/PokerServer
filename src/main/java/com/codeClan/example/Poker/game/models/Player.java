@@ -25,22 +25,22 @@ public class Player {
     @Column
     private String password;
 
-    @Transient
-    private List<Card> hand;
+    @Column
+    private ArrayList<Card> hand;
 
-    @Transient
+    @Column
     private boolean isBigBlind;
 
-    @Transient
+    @Column
     private boolean isSmallBlind;
 
-    @Transient
+    @Column
     private boolean isActive;
 
-    @Transient
+    @Column
     private double contribution;
 
-    @Transient
+    @Column
     private boolean folded;
 
     public Player() {
@@ -51,12 +51,13 @@ public class Player {
         this.stack = stack;
         this.username = username;
         this.password = password;
-        this.hand = new ArrayList<Card>();
         this.isBigBlind = false;
         this.isSmallBlind = false;
         this.isActive = false;
         this.contribution = 0;
         this.folded = false;
+        this.hand = new ArrayList<>();
+
     }
 
     public String getName() {
@@ -79,7 +80,7 @@ public class Player {
         return hand;
     }
 
-    public void setHand(List<Card> hand) {
+    public void setHand(ArrayList<Card> hand) {
         this.hand = hand;
     }
 

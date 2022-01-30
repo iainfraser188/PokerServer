@@ -74,27 +74,42 @@ public class PlayerController {
         Optional<Player> playerToFind = playerRepository.findById(id);
         if (playerToFind.isPresent()) {
             Player playerToUpdate = playerToFind.get();
-//            String value = "";
             changes.forEach(
                     (change, value) -> {
                         if ("name".equals(change)) {
                             playerToUpdate.setName((String) value);
-
-                        } else if ("userName".equals(change)) {
+                        }
+                        else if ("userName".equals(change)) {
                             playerToUpdate.setUsername((String) value);
 
-                        } else if ("password".equals(change)) {
+                        }
+                        else if ("password".equals(change)) {
                             playerToUpdate.setPassword((String) value);
 
-                        } else if ("stack".equals(change)) {
+                        }
+                        else if ("stack".equals(change)) {
                             playerToUpdate.setStack((Double) value);
 
-                        } else if ("folded".equals(change)) {
-                            playerToUpdate.setFolded((Boolean) value);
-                            
-                        } else if ("contribution".equals(change)){
-                            playerToUpdate.setContribution((Double) value);
                         }
+                        else if ("active".equals(change)){
+                            playerToUpdate.setActive((Boolean) value );
+                        }
+                        else if ("folded".equals(change)) {
+                            playerToUpdate.setFolded((Boolean) value);
+                        }
+                        else if ("contribution".equals(change)){
+                            playerToUpdate.setContribution((Double) value);
+
+                        }
+                        else if ("bigBlind".equals(change)){
+                            playerToUpdate.setBigBlind((Boolean) value);
+
+                        }
+                        else if ("smallBlind".equals(change)){
+                            playerToUpdate.setSmallBlind((Boolean) value);
+                        }
+                        playerRepository.save(playerToUpdate);
+
                     });
             return new ResponseEntity<>(playerToUpdate,HttpStatus.OK);
         }
@@ -102,6 +117,5 @@ public class PlayerController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 
         }
-
     }
     }
