@@ -2,36 +2,33 @@ package com.codeClan.example.Poker.game.models.game.bettingRound;
 
 import com.codeClan.example.Poker.game.models.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class PostFlopBetting {
-
+public class AltPreFlopBetting {
 
     private List<Player> players;
     private double pot;
     private double largestContribution;
     private boolean complete;
+    private double bigBlind;
     int activeIndex;
     int startingIndex;
-    boolean noBets;
     boolean firstRound;
 
 
-    public PostFlopBetting(List<Player> players, double pot) {
+    public AltPreFlopBetting(List<Player> players, double bigBlind) {
         this.players = players;
         this.pot = pot;
         this.complete = false;
-        this.largestContribution = 0;
+        this.largestContribution = bigBlind;
+        this.bigBlind = bigBlind;
         this.activeIndex = 0;
         this.startingIndex = 0;
-        this.noBets = true;
         this.firstRound = true;
     }
 
-    public PostFlopBetting() {
-
+    public AltPreFlopBetting() {
+        
     }
 
     public List<Player> getPlayers() {
@@ -70,8 +67,8 @@ public class PostFlopBetting {
 
     public void setFirstPlayerToActive() {
         for (Player player: this.players) {
-            if (player.isSmallBlind()) {
-                activeIndex = this.players.indexOf(player);
+            if (player.isBigBlind()) {
+                activeIndex = this.players.indexOf(player) + 1;
                 startingIndex = activeIndex;
                 player.setActive(true);
             }
@@ -122,12 +119,9 @@ public class PostFlopBetting {
 
     }
 
+    // Cycle through all players from UTG, THEN ->
 
-    // First player active and set int.
-    // Cycle through all players, THEN ->
-
-    // set firstRound = false
-    // If noBets == true, stop, THEN ->
+    // set firstRound = false, THEN ->
 
     // REPEAT BELOW:
     // Check if all contributions the same, if so - stop
@@ -146,7 +140,7 @@ public class PostFlopBetting {
                 players.get(activeIndex + 1);
             }
         } else {
-            if(noBets || checkContributionsAreSame() || checkSinglePlayerRemaining()){
+            if(checkContributionsAreSame() || checkSinglePlayerRemaining()){
                 this.complete = true;
             } else {
                 setNextUnfoldedToActive();
