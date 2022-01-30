@@ -152,7 +152,7 @@ public class Player {
     }
 
     public void increaseContribution(double amount){
-        double contributionAmount = this.getContribution() + amount;
+        double contributionAmount = this.contribution + amount;
         setContribution(contributionAmount);
     }
 
@@ -160,8 +160,8 @@ public class Player {
         return contribution;
     }
 
-    public void setContribution(double contribution) {
-        this.contribution = contribution;
+    public void setContribution(double amount) {
+        this.contribution = amount;
     }
 
     public boolean checkStackEnough(double betSize) {

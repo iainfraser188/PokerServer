@@ -89,7 +89,7 @@ public class PostFlopBetting {
     public boolean checkSinglePlayerRemaining(){
         int count = 0;
         for (Player player : players) {
-            if (player.getFolded()){
+            if (!player.getFolded()){
                 count++;
             }
         }
@@ -113,6 +113,11 @@ public class PostFlopBetting {
         for (int i = playerCheckIndex; i < players.size(); i++) {
             if(!players.get(i).getFolded()) {
                 players.get(i).setActive(true);
+                if(activeIndex != players.size() -1){
+                    activeIndex ++;
+                } else {
+                    activeIndex = 0;
+                }
                 break;
             }
             if (i == players.size() - 1) {
@@ -134,16 +139,26 @@ public class PostFlopBetting {
     // Check if only one player remaining, if so - stop, if not continue
     // Move to next unfolded player
 
-    public void onPlayerBet() {
+    public void onPlayerBet(double bet) {
+
+        if(bet != 0){
+            noBets = false;
+            this.largestContribution = players.get(activeIndex).getContribution();
+        }
+
+        if(activeIndex == startingIndex - 1 || (startingIndex == 0 && activeIndex == players.size() - 1)) {
+            firstRound = false;
+        }
 
         if(firstRound){
-            if(activeIndex == startingIndex - 1 || (startingIndex == 0 && activeIndex == players.size() - 1)) {
-                firstRound = false;
-            }
             if(activeIndex == players.size() -1){
                 players.get(0).setActive(true);
+                players.get(activeIndex).setActive(false);
+                activeIndex = 0;
             } else {
-                players.get(activeIndex + 1);
+                players.get(activeIndex + 1).setActive(true);
+                players.get(activeIndex).setActive(false);
+                activeIndex++;
             }
         } else {
             if(noBets || checkContributionsAreSame() || checkSinglePlayerRemaining()){
@@ -172,7 +187,7 @@ public class PostFlopBetting {
     public boolean checkContributionsAreSame() {
         boolean playersAreSame = true;
         for (Player player: this.players) {
-            if (player.getContribution() != this.findLargestContribution()){
+            if (player.getContribution() != this.findLargestContribution() && !player.getFolded()){
                 playersAreSame = false;
             }
         }

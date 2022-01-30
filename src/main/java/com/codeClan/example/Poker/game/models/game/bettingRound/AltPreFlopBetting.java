@@ -28,7 +28,7 @@ public class AltPreFlopBetting {
     }
 
     public AltPreFlopBetting() {
-        
+
     }
 
     public List<Player> getPlayers() {
@@ -86,7 +86,7 @@ public class AltPreFlopBetting {
     public boolean checkSinglePlayerRemaining(){
         int count = 0;
         for (Player player : players) {
-            if (player.getFolded()){
+            if (!player.getFolded()){
                 count++;
             }
         }
@@ -128,16 +128,25 @@ public class AltPreFlopBetting {
     // Check if only one player remaining, if so - stop, if not continue
     // Move to next unfolded player
 
-    public void onPlayerBet() {
+    public void onPlayerBet(double bet) {
+
+        if(bet != 0){
+            this.largestContribution = players.get(activeIndex).getContribution();
+        }
+
+        if(activeIndex == startingIndex - 1 || (startingIndex == 0 && activeIndex == players.size() - 1)) {
+            firstRound = false;
+        }
 
         if(firstRound){
-            if(activeIndex == startingIndex - 1 || (startingIndex == 0 && activeIndex == players.size() - 1)) {
-                firstRound = false;
-            }
             if(activeIndex == players.size() -1){
                 players.get(0).setActive(true);
+                players.get(activeIndex).setActive(false);
+                activeIndex = 0;
             } else {
                 players.get(activeIndex + 1);
+                players.get(activeIndex).setActive(false);
+                activeIndex++;
             }
         } else {
             if(checkContributionsAreSame() || checkSinglePlayerRemaining()){
@@ -166,7 +175,7 @@ public class AltPreFlopBetting {
     public boolean checkContributionsAreSame() {
         boolean playersAreSame = true;
         for (Player player: this.players) {
-            if (player.getContribution() != this.findLargestContribution()){
+            if (player.getContribution() != this.findLargestContribution() && !player.getFolded()){
                 playersAreSame = false;
             }
         }
