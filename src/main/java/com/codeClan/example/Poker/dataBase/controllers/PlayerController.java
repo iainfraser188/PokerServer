@@ -88,8 +88,10 @@ public class PlayerController {
 
                         } else if ("stack".equals(change)) {
                             playerToUpdate.setStack((Double) value);
+
                         } else if ("folded".equals(change)) {
                             playerToUpdate.setFolded((Boolean) value);
+                            
                         } else if ("contribution".equals(change)){
                             playerToUpdate.setContribution((Double) value);
                         }
