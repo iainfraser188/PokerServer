@@ -113,7 +113,9 @@ public class GameTableTests {
     public void canStartPreFlopBettingRound() {
         dealer1.dealHoleCards();
         gameTable.preFlopBettingRound();
-        System.out.println("end of test player1 stack: " + player1.getStack());
+        assertEquals(60.00, gameTable.getPlayers().get(0).getStack(), 0.0);
+        assertEquals(60.00, gameTable.getPlayers().get(1).getStack(), 0.0);
+        assertEquals(60.00, gameTable.getPlayers().get(2).getStack(), 0.0);
     }
 
 

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -22,21 +23,20 @@ public class PlayerController {
     }
 
     @GetMapping(value = "/players/{id}")
-    public ResponseEntity<Optional<Player>>getPlayer(@PathVariable Long id){
+    public ResponseEntity<Optional<Player>> getPlayer(@PathVariable Long id) {
         Optional<Player> payload = playerRepository.findById(id);
-        if(payload.isPresent()){
+        if (payload.isPresent()) {
             payload.get().setPassword(null);
-            return new ResponseEntity<>(payload,HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(payload,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(payload, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(payload, HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping(value = "/login")
     public ResponseEntity<Optional<Long>> validateLogin(
-            @RequestParam(required = true, name ="username") String username,
-            @RequestParam(required = true, name= "password") String password
+            @RequestParam(required = true, name = "username") String username,
+            @RequestParam(required = true, name = "password") String password
     ) {
         Optional<Player> player = playerRepository.findPlayerByUsernameAndPassword(username, password);
         if (player.isPresent()) {
@@ -48,13 +48,13 @@ public class PlayerController {
     }
 
     @PostMapping(value = "/players")
-    public ResponseEntity<Player>postPlayer(@RequestBody Player player){
+    public ResponseEntity<Player> postPlayer(@RequestBody Player player) {
         playerRepository.save(player);
         return new ResponseEntity<>(player, HttpStatus.CREATED);
     }
 
-    @PutMapping (value = "/players/{id}")
-    public ResponseEntity<Player>updatePlayer(@PathVariable Long id, @RequestBody Player player) {
+    @PutMapping(value = "/players/{id}")
+    public ResponseEntity<Player> updatePlayer(@PathVariable Long id, @RequestBody Player player) {
         Optional<Player> playerToFind = playerRepository.findById(id);
         if (playerToFind.isPresent()) {
             Player playerToUpdate = playerToFind.get();
@@ -63,73 +63,43 @@ public class PlayerController {
             playerToUpdate.setUsername(player.getUsername());
             playerToUpdate.setPassword(player.getPassword());
             playerRepository.save(playerToUpdate);
-            return new ResponseEntity<>(playerToUpdate,HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(playerToUpdate, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
-    @PatchMapping (value = "/players/{id}/{name}")
-    public ResponseEntity<Player>updatePlayerName(@PathVariable Long id, @RequestBody Player player) {
+    @PatchMapping(value = "/players/{id}")
+    public ResponseEntity<Player> updatePlayerValues(@PathVariable Long id, @RequestBody Map<Object, Object> changes) {
         Optional<Player> playerToFind = playerRepository.findById(id);
         if (playerToFind.isPresent()) {
             Player playerToUpdate = playerToFind.get();
-            playerToUpdate.setName(player.getName());
-            playerRepository.save(playerToUpdate);
+//            String value = "";
+            changes.forEach(
+                    (change, value) -> {
+                        if ("name".equals(change)) {
+                            playerToUpdate.setName((String) value);
+
+                        } else if ("userName".equals(change)) {
+                            playerToUpdate.setUsername((String) value);
+
+                        } else if ("password".equals(change)) {
+                            playerToUpdate.setPassword((String) value);
+
+                        } else if ("stack".equals(change)) {
+                            playerToUpdate.setStack((Double) value);
+                        } else if ("folded".equals(change)) {
+                            playerToUpdate.setFolded((Boolean) value);
+                        } else if ("contribution".equals(change)){
+                            playerToUpdate.setContribution((Double) value);
+                        }
+                    });
             return new ResponseEntity<>(playerToUpdate,HttpStatus.OK);
         }
-        else{
-            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+
         }
+
     }
-
-    @PatchMapping (value = "/players/{id}/{username}")
-    public ResponseEntity<Player>updatePlayerUserName(@PathVariable Long id, @RequestBody Player player) {
-        Optional<Player> playerToFind = playerRepository.findById(id);
-        if (playerToFind.isPresent()) {
-            Player playerToUpdate = playerToFind.get();
-            playerToUpdate.setName(player.getUsername());
-            playerRepository.save(playerToUpdate);
-            return new ResponseEntity<>(playerToUpdate,HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PatchMapping (value = "/players/{id}/{password}")
-    public ResponseEntity<Player>updatePlayerPassword(@PathVariable Long id, @RequestBody Player player) {
-        Optional<Player> playerToFind = playerRepository.findById(id);
-        if (playerToFind.isPresent()) {
-            Player playerToUpdate = playerToFind.get();
-            playerToUpdate.setPassword(player.getPassword());
-            playerRepository.save(playerToUpdate);
-            return new ResponseEntity<>(playerToUpdate,HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PatchMapping (value = "/players/{id}/{stack}")
-    public ResponseEntity<Player>updatePlayerStack(@PathVariable Long id, @RequestBody Player player) {
-        Optional<Player> playerToFind = playerRepository.findById(id);
-        if (playerToFind.isPresent()) {
-            Player playerToUpdate = playerToFind.get();
-            playerToUpdate.setStack(player.getStack());
-            playerRepository.save(playerToUpdate);
-            return new ResponseEntity<>(playerToUpdate,HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-        }
-    }
-
-
-
-
-
-
-
     }
