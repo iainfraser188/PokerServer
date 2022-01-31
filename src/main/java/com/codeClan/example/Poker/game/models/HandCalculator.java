@@ -163,7 +163,7 @@ public class HandCalculator {
         ArrayList<Card> cards = (ArrayList<Card>) player.get("cards");
 
         if(cards != null) {
-            PlayerHand hand = new PlayerHand(cards);
+            PlayerHand hand = new PlayerHand(cards, "");
             value = this.isStraight(hand);
         }
 

@@ -42,6 +42,8 @@ public class CalculatorTests {
     List<Card> cards9;
     List<Card> cards10;
     List<Card> cards11;
+    List<Card> cards12;
+    List<Card> cards13;
     PlayerHand hand1;
     PlayerHand hand2;
     PlayerHand hand3;
@@ -53,6 +55,8 @@ public class CalculatorTests {
     PlayerHand hand9;
     PlayerHand hand10;
     PlayerHand hand11;
+    PlayerHand hand12;
+    PlayerHand hand13;
     HandCalculator calc;
 
 
@@ -164,18 +168,26 @@ public class CalculatorTests {
         cards11.add(king1);
         cards11.add(four1);
         cards11.add(five1);
+        cards12 = new ArrayList<>();
+        cards12.add(four1);
+        cards12.add(five1);
+        cards13 = new ArrayList<>();
+        cards13.add(queen2);
+        cards13.add(ace1);
         calc = new HandCalculator();
-        hand1 = new PlayerHand(cards);
-        hand2 = new PlayerHand(cards2);
-        hand3 = new PlayerHand(cards3);
-        hand4 = new PlayerHand(cards4);
-        hand5 = new PlayerHand(cards5);
-        hand6 = new PlayerHand(cards6);
-        hand7 = new PlayerHand(cards7);
-        hand8 = new PlayerHand(cards8);
-        hand9 = new PlayerHand(cards9);
-        hand10 = new PlayerHand(cards10);
-        hand11 = new PlayerHand(cards11);
+        hand1 = new PlayerHand(cards, "");
+        hand2 = new PlayerHand(cards2, "");
+        hand3 = new PlayerHand(cards3, "");
+        hand4 = new PlayerHand(cards4, "");
+        hand5 = new PlayerHand(cards5, "");
+        hand6 = new PlayerHand(cards6, "");
+        hand7 = new PlayerHand(cards7, "");
+        hand8 = new PlayerHand(cards8, "");
+        hand9 = new PlayerHand(cards9, "");
+        hand10 = new PlayerHand(cards10, "");
+        hand11 = new PlayerHand(cards11, "");
+        hand12 = new PlayerHand(cards12, "");
+        hand13 = new PlayerHand(cards13, "");
     }
 
     @Test
@@ -337,5 +349,6 @@ public class CalculatorTests {
     public void canCompareHighCardsNotEqual() {
         assertEquals(hand10, calc.overall(hand11, hand10));
     }
+
 }
 
