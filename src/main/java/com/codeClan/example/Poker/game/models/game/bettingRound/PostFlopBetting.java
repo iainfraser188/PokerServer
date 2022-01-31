@@ -124,9 +124,7 @@ public class PostFlopBetting {
                 i = -1;
             }
         }
-
     }
-
 
     // First player active and set int.
     // Cycle through all players, THEN ->
@@ -168,6 +166,14 @@ public class PostFlopBetting {
             }
         }
 
+    }
+
+    public void onPlayerFold() {
+        if(checkSinglePlayerRemaining()) {
+            this.complete = true;
+        } else {
+            setNextUnfoldedToActive();
+        }
     }
 
     //    find largest contribution

@@ -158,6 +158,14 @@ public class AltPreFlopBetting {
 
     }
 
+    public void onPlayerFold() {
+        if(checkSinglePlayerRemaining()) {
+            this.complete = true;
+        } else {
+            setNextUnfoldedToActive();
+        }
+    }
+    
     //    find largest contribution
     public double findLargestContribution(){
         double newLargestContribution = 0;
