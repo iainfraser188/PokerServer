@@ -11,6 +11,7 @@ public class PreFlopBetting {
     private double largestContribution;
     private boolean complete;
     private double bigBlind;
+    private Player activePlayer;
 
     public PreFlopBetting(List<Player> players, double bigBlind) {
         this.players = players;
@@ -18,6 +19,7 @@ public class PreFlopBetting {
         this.largestContribution = bigBlind;
         this.complete = false;
         this.bigBlind = bigBlind;
+        this.activePlayer = null;
     }
 
 
@@ -204,7 +206,7 @@ public class PreFlopBetting {
     }
 
     public void handleActivePlayerTurn() {
-        Player activePlayer = new Player();
+//        Optional<Player> activePlayer;
         int activePlayerIndex = 0;
         for (Player player: this.players) {
             if (player.isActive()) {

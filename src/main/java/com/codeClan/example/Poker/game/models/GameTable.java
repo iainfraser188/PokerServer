@@ -1,23 +1,60 @@
 package com.codeClan.example.Poker.game.models;
 
 import com.codeClan.example.Poker.game.models.game.bettingRound.PreFlopBetting;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name="game_tables")
 public class GameTable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "pot")
     private double pot;
+
+//    @JsonBackReference
+    @OneToMany(mappedBy = "game_table", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"game_table"})
     private List<Player> players;
+
+//    @Column(name="board")
+//    @ElementCollection
+    @Transient
     private List<Card> board;
+
+    @Column(name = "big_blind")
     private double bigBlind;
+
+    @Column(name = "small_blind")
     private double smallBlind;
 
-    public GameTable(double pot, List<Player> players, List<Card>board, double bigBlind) {
+//    public GameTable() {
+//    }
+
+    public GameTable() {
+    }
+
+    public GameTable(double pot, List<Player> players, double bigBlind) {
+
         this.pot = pot;
         this.players = players;
-        this.board = board;
+        this.board = new ArrayList<>();
         this.bigBlind = bigBlind;
-        this.smallBlind = bigBlind/2;
+        this.smallBlind = bigBlind / 2;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public double getPot() {
@@ -56,7 +93,7 @@ public class GameTable {
         return board;
     }
 
-    public void setBoard(List<Card> board) {
+    public void setBoard(ArrayList<Card> board) {
         this.board = board;
     }
 
@@ -76,6 +113,9 @@ public class GameTable {
         this.pot = 0;
     }
 
+    public void addPlayer(Player player) {
+        this.players.add(player);
+    }
 
     // GAME METHODS
 

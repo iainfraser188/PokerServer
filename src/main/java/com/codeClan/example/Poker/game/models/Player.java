@@ -1,5 +1,7 @@
 package com.codeClan.example.Poker.game.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +21,10 @@ public class Player {
     @Column(name="stack")
     private double stack;
 
-    @Column
+    @Column(name="username")
     private String username;
 
-    @Column
+    @Column(name="password")
     private String password;
 
     @Transient
@@ -43,6 +45,15 @@ public class Player {
     @Transient
     private boolean folded;
 
+    @Transient
+    private double bigBlindValue;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_table_id", nullable = true)
+    @JsonIgnoreProperties({"players"})
+    private GameTable game_table;
+
+
     public Player() {
     }
 
@@ -57,7 +68,41 @@ public class Player {
         this.isActive = false;
         this.contribution = 0;
         this.folded = false;
+        this.game_table = null;
+        this.bigBlindValue = 0;
     }
+
+    public double getBigBlindValue() {
+        return bigBlindValue;
+    }
+
+    public void setBigBlindValue(double bigBlindValue) {
+        this.bigBlindValue = bigBlindValue;
+    }
+
+    public GameTable getGame_table() {
+        return game_table;
+    }
+
+    public void setGame_table(GameTable game_table) {
+        this.game_table = game_table;
+    }
+
+    public boolean isFolded() {
+        return folded;
+    }
+
+    public void setFolded(boolean folded) {
+        this.folded = folded;
+    }
+
+//    public GameTable getGameTable() {
+//        return game_table;
+//    }
+//
+//    public void setGameTable(GameTable gameTable) {
+//        this.game_table = gameTable;
+//    }
 
     public String getName() {
         return name;
@@ -123,8 +168,8 @@ public class Player {
         return isBigBlind;
     }
 
-    public void setBigBlind(boolean bigBlind) {
-        isBigBlind = bigBlind;
+    public void setBigBlind(boolean BigBlind) {
+        isBigBlind = BigBlind;
     }
 
     public boolean isSmallBlind() {
