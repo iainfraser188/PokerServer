@@ -19,12 +19,13 @@ public class DataLoader implements ApplicationRunner {
 
     public void run(ApplicationArguments args){
 
-        Player iain = new Player("iain",1000,"iain123","1234");
+        Player iain = new Player("iain",1000,"Iain123","1234");
         playerRepository.save(iain);
-        Player alex = new Player("alex",1000,"alex123","4321");
+        Player alex = new Player("alex",1000,"A","1");
         playerRepository.save(alex);
-        Player stuart = new Player("stuart",1000,"stuart123","2345");
+        Player stuart = new Player("stuart",1000,"Stuart123","2345");
         playerRepository.save(stuart);
+
 
     }
 }

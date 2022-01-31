@@ -14,16 +14,17 @@ function setConnected(connected) {
 
 function connect() {
     var socket = new SockJS('/ws');
-    console.log("Number users below");
-    console.log(socket.clients.size());
+//    console.log("Number users below");
+//    console.log(socket.clients.size());
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        setConnected(true);
+        setConnected(true); // not needed ??
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-            console.log("inside the client subscribe");
-            showGreeting(JSON.parse(greeting.body).content);
-        });
+        stompClient.subscribe('/client/greetings');
+//        stompClient.subscribe('/topic/greetings', function (greeting) {
+//            console.log("inside the client subscribe");
+//            showGreeting(greeting);
+//        });
     });
 }
 
@@ -31,13 +32,13 @@ function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
-    setConnected(false);
+    setConnected(false); // not needed ??
     console.log("Disconnected");
 }
 
 function sendName() {
 //    stompClient.send("/app/hello", {}, $("#name").val());
-    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
+    stompClient.send("/server/hello", {}, JSON.stringify({'name': $("#name").val()}));
 }
 
 function showGreeting(message) {
