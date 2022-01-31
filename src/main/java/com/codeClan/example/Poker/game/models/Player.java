@@ -1,5 +1,7 @@
 package com.codeClan.example.Poker.game.models;
 
+import com.vaadin.flow.component.ClientCallable;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +27,23 @@ public class Player {
     @Column
     private String password;
 
-    @Transient
-    private List<Card> hand;
+    @Column
+    private ArrayList<Card> hand;
+
+    @Column
+    private boolean isBigBlind;
+
+    @Column
+    private boolean isSmallBlind;
+
+    @Column
+    private boolean isActive;
+
+    @Column
+    private double contribution;
+
+    @Column
+    private boolean folded;
 
     public Player() {
     }
@@ -36,7 +53,12 @@ public class Player {
         this.stack = stack;
         this.username = username;
         this.password = password;
-        this.hand = new ArrayList<Card>();
+        this.isBigBlind = false;
+        this.isSmallBlind = false;
+        this.isActive = false;
+        this.contribution = 0;
+        this.folded = false;
+        this.hand = new ArrayList<>();
 
     }
 
@@ -60,7 +82,7 @@ public class Player {
         return hand;
     }
 
-    public void setHand(List<Card> hand) {
+    public void setHand(ArrayList<Card> hand) {
         this.hand = hand;
     }
 
@@ -95,5 +117,92 @@ public class Player {
     public double removeFromStack(double amount){
         return this.stack -= amount;
     }
+
+    public void addCard(Card card){
+        this.hand.add(card);
+    }
+
+    public boolean isBigBlind() {
+        return isBigBlind;
+    }
+
+    public void setBigBlind(boolean bigBlind) {
+        isBigBlind = bigBlind;
+    }
+
+    public boolean isSmallBlind() {
+        return isSmallBlind;
+    }
+
+    public void setSmallBlind(boolean smallBlind) {
+        isSmallBlind = smallBlind;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean getFolded() {
+        return this.folded;
+    }
+
+    public void setFolded(Boolean folded) {
+        this.folded = folded;
+    }
+
+    public void increaseContribution(double amount){
+        double contributionAmount = this.getContribution() + amount;
+        setContribution(contributionAmount);
+    }
+
+    public double getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(double contribution) {
+        this.contribution = contribution;
+    }
+
+    public boolean checkStackEnough(double betSize) {
+        if (this.stack >= betSize) {
+            return  true;
+        }
+        return false;
+    }
+
+    @ClientCallable
+    public void bet(double betSize) {
+        if (this.checkStackEnough(betSize)) {
+            this.removeFromStack(betSize);
+            this.increaseContribution(betSize);
+            this.setActive(false);
+        } else {
+            this.fold();
+        }
+    }
+
+    @ClientCallable
+    public void call(double largestContribution) {
+        double amountToCall = largestContribution - this.getContribution();
+        if (this.checkStackEnough(amountToCall)) {
+            this.removeFromStack(amountToCall);
+            this.increaseContribution(amountToCall);
+            this.setActive(false);
+        } else {
+            this.fold();
+        }
+    }
+
+    @ClientCallable
+    public void fold() {
+        System.out.println("Folded");
+        this.setActive(false);
+        this.setFolded(true);
+    }
+
 
 }

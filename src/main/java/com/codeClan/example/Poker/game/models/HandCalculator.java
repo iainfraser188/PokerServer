@@ -1,9 +1,6 @@
 package com.codeClan.example.Poker.game.models;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class HandCalculator {
 
@@ -14,8 +11,6 @@ public class HandCalculator {
         Collections.sort(cards, Comparator.comparingInt(card -> card.getCardValue().getValue()));
         int isFour = 0;
         for (int i = 0; i < cards.size() - 3; i++ ) {
-
-            // Requires getIntValue() after initial get() function.
 
             if(cards.get(i).getCardValue().getValue() == cards.get(i+1).getCardValue().getValue()
                     && cards.get(i+1).getCardValue().getValue()  == cards.get(i+2).getCardValue().getValue()
@@ -35,7 +30,6 @@ public class HandCalculator {
         int value = 0;
         boolean aces = false;
 
-        // Requires getIntValue() after initial get() function.
         for (int i = 0; i < cards.size() - 2; i++ ) {
             if( cards.get(i).getCardValue().getValue() == cards.get(i+1).getCardValue().getValue()
                     && cards.get(i+1).getCardValue().getValue() == cards.get(i+2).getCardValue().getValue()) {
@@ -57,7 +51,6 @@ public class HandCalculator {
         int value = 0;
         boolean aces = false;
 
-        // Requires getIntValue() after initial get() function.
         for (int i = 0; i < cards.size() - 1; i++ ) {
             if(cards.get(i).getCardValue().getValue() == cards.get(i+1).getCardValue().getValue()) {
                 value = cards.get(i).getCardValue().getValue();
@@ -73,11 +66,11 @@ public class HandCalculator {
         return value;
     }
 
-    // CALCULATES FLUSH
 
-    public int isFlush(PlayerHand playerHand) {
+    public HashMap<String, Object> isFlush(PlayerHand playerHand) {
         List<Card> cards = playerHand.getPlayerCards();
         int value = 0;
+        HashMap<String, Object> player = new HashMap<>();
         boolean ace = false;
         ArrayList<Card> hearts = new ArrayList<>();
         ArrayList<Card> diamonds = new ArrayList<>();
@@ -97,42 +90,45 @@ public class HandCalculator {
             }
         }
 
-        // Needs getIntValue added properly and sort function set up
-        if (hearts.size() >= 4){
+        if (hearts.size() >= 5){
             Collections.sort(hearts, Comparator.comparingInt(card -> card.getCardValue().getValue()));
             int size = hearts.size();
+            player.put("cards", hearts);
             int highest = hearts.get(size-1).getCardValue().getValue();
             value = highest;
             if(hearts.get(0).getCardValue().getValue() == 1){
                 value = 14;
             }
-        } else if (diamonds.size() >= 4){
+        } else if (diamonds.size() >= 5){
             Collections.sort(diamonds, Comparator.comparingInt(card -> card.getCardValue().getValue()));
             int size = diamonds.size();
+            player.put("cards", diamonds);
             int highest = diamonds.get(size-1).getCardValue().getValue();
             value = highest;
             if(diamonds.get(0).getCardValue().getValue() == 1){
                 value = 14;
             }
-        } else if (clubs.size() >= 4){
+        } else if (clubs.size() >= 5){
             Collections.sort(clubs, Comparator.comparingInt(card -> card.getCardValue().getValue()));
             int size = clubs.size();
+            player.put("cards", clubs);
             int highest = clubs.get(size-1).getCardValue().getValue();
             value = highest;
             if(clubs.get(0).getCardValue().getValue() == 1){
                 value = 14;
             }
-        } else if (spades.size() >= 4) {
+        } else if (spades.size() >= 5) {
             Collections.sort(spades, Comparator.comparingInt(card -> card.getCardValue().getValue()));
             int size = spades.size();
+            player.put("cards", spades);
             int highest = spades.get(size-1).getCardValue().getValue();
             value = highest;
             if(spades.get(0).getCardValue().getValue() == 1){
                 value = 14;
             }
         }
-        return value;
-        // Edit this to return hashmap including value and arraylist of flush cards for use in straight flush calculator
+        player.put("value", value);
+        return player;
     }
 
     public int isStraight(PlayerHand playerHand) {
@@ -140,7 +136,7 @@ public class HandCalculator {
         Collections.sort(cards, Comparator.comparingInt(card -> card.getCardValue().getValue()));
         int consecutive = 1;
         int straight = 0;
-        for (int i = 0; i < cards.size() - 4; i++) {
+        for (int i = 0; i < cards.size() - 1; i++) {
             if(cards.get(i).getCardValue().getValue() + 1 == cards.get(i+1).getCardValue().getValue()) {
                 consecutive++;
                 if (consecutive > 4) {
@@ -153,7 +149,7 @@ public class HandCalculator {
             }
         }
 
-        if(consecutive >= 4 && cards.get(0).getCardValue().getValue() == 1) {
+        if(consecutive >= 4 && cards.get(0).getCardValue().getValue() == 1 && cards.get(6).getCardValue().getValue() == 13) {
             straight = 14;
         }
 
@@ -161,24 +157,179 @@ public class HandCalculator {
     }
 
     public int isStraightFlush(PlayerHand playerHand) {
+
         int value = 0;
-        // Use flush calculator and then straight calculator;
+        HashMap<String, Object> player = this.isFlush(playerHand);
+        ArrayList<Card> cards = (ArrayList<Card>) player.get("cards");
+
+        if(cards != null) {
+            PlayerHand hand = new PlayerHand(cards);
+            value = this.isStraight(hand);
+        }
+
         return value;
     }
 
-//    DOESNT WORK AS PAIR ALWAYS RETURNS HIGHEST PAIR, MAY CLASH WITH TRIPS
-//    public int isFullHouse(PlayerHand playerHand) {
-//        int pair = this.isPair(playerHand);
-//        int trips = this.isThreeOfAKind(playerHand);
-//        if(pair != 0 && trips != 0 && pair != trips) {
-//            if(trips == 1) {
-//                trips = 14;
-//            }
-//            return trips;
-//        } else {
-//            return 0;
-//        }
-//    }
+    public int isFullHouse(PlayerHand playerHand) {
+        List<Card> cards = playerHand.getPlayerCards();
+        Collections.sort(cards, Comparator.comparingInt(card -> card.getCardValue().getValue()));
+        int trips = this.isThreeOfAKind(playerHand);
+        if(trips == 14){
+            trips = 1;
+        }
+        int pair = 0;
+        if(trips != 0) {
+            for (int i = 0; i < cards.size() - 1; i++ ) {
+                if(cards.get(i).getCardValue().getValue() == cards.get(i+1).getCardValue().getValue()
+                        && cards.get(i).getCardValue().getValue() != trips) {
 
+                    pair = cards.get(i).getCardValue().getValue();
+                }
+            }
+        }
+        if (pair != 0){
+            if(trips == 1){
+                trips = 14;
+            }
+            return trips;
+        }
+
+        return 0;
+    }
+
+    public int isTwoPair(PlayerHand playerHand) {
+        List<Card> cards = playerHand.getPlayerCards();
+        Collections.sort(cards, Comparator.comparingInt(card -> card.getCardValue().getValue()));
+        int pair = this.isPair(playerHand);
+        if(pair == 14){
+            pair = 1;
+        }
+        int lowPair = 0;
+        if(pair != 0) {
+            for (int i = 0; i < cards.size() - 1; i++ ) {
+                if(cards.get(i).getCardValue().getValue() == cards.get(i+1).getCardValue().getValue()
+                        && cards.get(i).getCardValue().getValue() != pair) {
+
+                    lowPair = cards.get(i).getCardValue().getValue();
+                }
+            }
+        }
+        if (lowPair != 0){
+            if(pair == 1){
+                pair = 14;
+            }
+            return pair;
+        }
+
+        return 0;
+    }
+
+    public int highCard(PlayerHand playerHand1) {
+        List<Card> cards1 = playerHand1.getPlayerCards();
+        Collections.sort(cards1, Comparator.comparingInt(card -> card.getCardValue().getValue()));
+        if(cards1.get(0).getCardValue() == CardFace.ACE){
+            cards1.get(0).setCardValue(CardFace.ACEHIGH);
+            Collections.sort(cards1, Comparator.comparingInt(card -> card.getCardValue().getValue()));
+        }
+        return cards1.get(6).getCardValue().getValue();
+    }
+
+    public PlayerHand overall(PlayerHand playerHand1, PlayerHand playerHand2) {
+
+        int value1;
+        int value2;
+
+        value1 = isStraightFlush(playerHand1);
+        value2 = isStraightFlush(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isFourOfAKind(playerHand1);
+        value2 = isFourOfAKind(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isFullHouse(playerHand1);
+        value2 = isFullHouse(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = (int) isFlush(playerHand1).get("value");
+        value2 = (int) isFlush(playerHand2).get("value");
+
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isStraight(playerHand1);
+        value2 = isStraight(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isThreeOfAKind(playerHand1);
+        value2 = isThreeOfAKind(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isTwoPair(playerHand1);
+        value2 = isTwoPair(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = isPair(playerHand1);
+        value2 = isPair(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        } else if (value1 == value2 && value1 != 0) {
+            return null;
+        }
+
+        value1 = highCard(playerHand1);
+        value2 = highCard(playerHand2);
+        if(value1 > value2) {
+            return playerHand1;
+        } else if (value2 > value1) {
+            return playerHand2;
+        }
+
+        return null;
+    }
 
 }
+

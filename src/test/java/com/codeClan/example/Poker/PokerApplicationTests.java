@@ -31,8 +31,8 @@ public class PokerApplicationTests {
 
 
 	GameTable gameTable1;
-	List<Player> players = new ArrayList<>();
-	List<Card> board1 = new ArrayList<>();
+	ArrayList<Player> players = new ArrayList<>();
+	ArrayList<Card> board1 = new ArrayList<>();
 
 
 
@@ -62,6 +62,8 @@ public class PokerApplicationTests {
 
 		 player1 = new Player("iain",1000, "iain123","1234");
 		 player2 = new Player("alex",900, "alex123","4321");
+		 player1.addCard(card1);
+		 player1.addCard(card2);
 
 		 board1 = new ArrayList<>();
 		 board1.add(card1);
@@ -70,7 +72,7 @@ public class PokerApplicationTests {
 		 players = new ArrayList<>();
 		 players.add(player1);
 		 players.add(player2);
-		 gameTable1 = new GameTable(2000,players, board1);
+		 gameTable1 = new GameTable(2000,players, board1,50);
 	}
 	@Test
 	public void contextLoads() {
