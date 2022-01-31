@@ -31,8 +31,8 @@ public class PokerApplicationTests {
 
 
 	GameTable gameTable1;
-	List<Player> players = new ArrayList<>();
-	List<Card> board1 = new ArrayList<>();
+	ArrayList<Player> players = new ArrayList<>();
+	ArrayList<Card> board1 = new ArrayList<>();
 
 
 

@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -37,7 +36,7 @@ public class GameTableTests {
         player1 = new Player("Player1", 100.0, "Player1", "123");
         player2 = new Player("Player2", 100.0, "Player2", "123");
         player3 = new Player("Player3", 100.0, "Player3", "123");
-        List<Player> players1 = new ArrayList<>(Arrays.asList(player1, player2, player3));
+        ArrayList<Player> players1 = new ArrayList<>(Arrays.asList(player1, player2, player3));
         ArrayList<Card> board1= new ArrayList<>();
         gameTable = new GameTable(0,players1,board1,40.0);
         deck1 = new Deck();

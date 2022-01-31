@@ -2,17 +2,35 @@ package com.codeClan.example.Poker.game.models;
 
 import com.codeClan.example.Poker.game.models.game.bettingRound.PreFlopBetting;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name="game")
 public class GameTable {
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name="pot")
     private double pot;
-    private List<Player> players;
-    private List<Card> board;
+
+    @Column(name="players")
+    private ArrayList<Player> players;
+
+    @Column(name="board")
+    private ArrayList<Card> board;
+
+    @Column(name="bigBlind")
     private double bigBlind;
+
+    @Column(name="smallBlind")
     private double smallBlind;
 
-    public GameTable(double pot, List<Player> players, List<Card>board, double bigBlind) {
+    public GameTable(double pot, ArrayList<Player> players, ArrayList<Card>board, double bigBlind) {
         this.pot = pot;
         this.players = players;
         this.board = board;
@@ -48,7 +66,7 @@ public class GameTable {
         return players;
     }
 
-    public void setPlayers(List<Player> players) {
+    public void setPlayers(ArrayList<Player> players) {
         this.players = players;
     }
 
@@ -56,7 +74,7 @@ public class GameTable {
         return board;
     }
 
-    public void setBoard(List<Card> board) {
+    public void setBoard(ArrayList<Card> board) {
         this.board = board;
     }
 

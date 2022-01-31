@@ -1,5 +1,7 @@
 package com.codeClan.example.Poker.game.models;
 
+import com.vaadin.flow.component.ClientCallable;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -172,6 +174,7 @@ public class Player {
         return false;
     }
 
+    @ClientCallable
     public void bet(double betSize) {
         if (this.checkStackEnough(betSize)) {
             this.removeFromStack(betSize);
@@ -182,6 +185,7 @@ public class Player {
         }
     }
 
+    @ClientCallable
     public void call(double largestContribution) {
         double amountToCall = largestContribution - this.getContribution();
         if (this.checkStackEnough(amountToCall)) {
@@ -193,6 +197,7 @@ public class Player {
         }
     }
 
+    @ClientCallable
     public void fold() {
         System.out.println("Folded");
         this.setActive(false);
