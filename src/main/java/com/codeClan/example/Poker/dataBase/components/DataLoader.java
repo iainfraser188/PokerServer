@@ -29,7 +29,7 @@ public class DataLoader implements ApplicationRunner {
 
         Player Iain = new Player("iain", 1000, "Iain123", "1234");
 
-        Player Alex = new Player("alex", 1000, "Alex123", "4321");
+        Player Alex = new Player("alex", 1000, "A", "1");
 
         Player Stuart = new Player("stuart", 1000, "Stuart123", "2345");
 

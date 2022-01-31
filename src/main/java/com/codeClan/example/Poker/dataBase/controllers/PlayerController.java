@@ -26,6 +26,7 @@ public class PlayerController {
         Optional<Player> payload = playerRepository.findById(id);
         if(payload.isPresent()){
             payload.get().setPassword(null);
+            payload.get().setGame_table(null);
             return new ResponseEntity<>(payload,HttpStatus.OK);
         }
         else {
@@ -126,10 +127,4 @@ public class PlayerController {
         }
     }
 
-
-
-
-
-
-
-    }
+}
