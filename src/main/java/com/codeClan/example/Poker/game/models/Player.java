@@ -1,5 +1,6 @@
 package com.codeClan.example.Poker.game.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -48,6 +49,7 @@ public class Player {
     @Transient
     private double bigBlindValue;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_table_id", nullable = true)
     @JsonIgnoreProperties({"players"})
@@ -84,8 +86,8 @@ public class Player {
         return game_table;
     }
 
-    public void setGame_table(GameTable game_table) {
-        this.game_table = game_table;
+    public void setGame_table(GameTable gameTable) {
+        this.game_table = gameTable;
     }
 
     public boolean isFolded() {

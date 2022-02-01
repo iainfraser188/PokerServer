@@ -15,6 +15,9 @@ public class GameTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "game_key")
+    private String gameKey;
+
     @Column(name = "pot")
     private double pot;
 
@@ -43,14 +46,26 @@ public class GameTable {
     public GameTable() {
     }
 
+<<<<<<< HEAD
     public GameTable(double pot, List<Player> players, double bigBlind, Deck deck) {
 
+=======
+    public GameTable(double pot, List<Player> players, double bigBlind) {
+>>>>>>> develop
         this.pot = pot;
         this.players = players;
         this.board = new ArrayList<>();
         this.bigBlind = bigBlind;
         this.smallBlind = bigBlind / 2;
         this.deck = deck;
+    }
+
+    public String getGameKey() {
+        return gameKey;
+    }
+
+    public void setGameKey(String game_key) {
+        this.gameKey = game_key;
     }
 
     public Long getId() {
