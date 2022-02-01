@@ -27,6 +27,8 @@ public class Dealer {
             Card card2 = deck.dealCard();
             this.gameTable.getPlayers().get(i).addCard(card1);
             this.gameTable.getPlayers().get(i).addCard(card2);
+            card1.setPlayer(this.gameTable.getPlayers().get(i));
+            card2.setPlayer(this.gameTable.getPlayers().get(i));
         }
     }
 

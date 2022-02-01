@@ -1,5 +1,6 @@
 package com.codeClan.example.Poker.game.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -28,7 +29,9 @@ public class Player {
     @Column(name="password")
     private String password;
 
-    @Transient
+    @JsonBackReference
+    @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"player"})
     private List<Card> hand;
 
     @Transient

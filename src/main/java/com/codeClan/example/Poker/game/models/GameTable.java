@@ -1,6 +1,7 @@
 package com.codeClan.example.Poker.game.models;
 
 import com.codeClan.example.Poker.game.models.game.bettingRound.PreFlopBetting;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -26,9 +27,9 @@ public class GameTable {
     @JsonIgnoreProperties({"game_table"})
     private List<Player> players;
 
-//    @Column(name="board")
-//    @ElementCollection
-    @Transient
+    @JsonBackReference
+    @OneToMany(mappedBy = "gameTable", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"gameTable"})
     private List<Card> board;
 
     @Column(name = "big_blind")
