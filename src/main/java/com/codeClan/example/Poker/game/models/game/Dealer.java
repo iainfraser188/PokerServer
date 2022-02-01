@@ -22,7 +22,7 @@ public class Dealer {
     }
 
     public void dealHoleCards() {
-        for(int i = 0; i < gameTable.getPlayers().size(); i++) {
+        for(int i = 0; i < this.gameTable.getPlayers().size(); i++) {
             Card card1 = deck.dealCard();
             Card card2 = deck.dealCard();
             this.gameTable.getPlayers().get(i).addCard(card1);
