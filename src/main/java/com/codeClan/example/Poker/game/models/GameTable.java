@@ -46,12 +46,9 @@ public class GameTable {
     public GameTable() {
     }
 
-<<<<<<< HEAD
+
     public GameTable(double pot, List<Player> players, double bigBlind, Deck deck) {
 
-=======
-    public GameTable(double pot, List<Player> players, double bigBlind) {
->>>>>>> develop
         this.pot = pot;
         this.players = players;
         this.board = new ArrayList<>();

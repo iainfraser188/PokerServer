@@ -33,21 +33,7 @@ public class PlayerWebSocketController {
     // CREATE GAME
     @MessageMapping("/create/game/{gameKey}")
     @SendTo("/client/greetings")
-<<<<<<< HEAD
-    public GameTable gameTable(Player user, @DestinationVariable long id) throws Exception {
-        // call user repository
-        Player player = playerRepository.findById(user.getId()).get();
-        System.out.println("player" + player);
-        ArrayList<Player> players = new ArrayList<Player>(Arrays.asList(player));
-        Deck deck = new Deck();
-        GameTable gameTable = new GameTable(0.0, players, user.getBigBlindValue(), deck);
-//        System.out.println("gametable" + gameTable.getId());
-        gameTableRepository.save(gameTable);
-        player.setGame_table(gameTable);
-        playerRepository.save(player);
-        System.out.println("created game. User: " + player.getUsername() + ". GameTable: " + gameTable.getId());
-        return gameTable;
-=======
+
     public ResponseEntity<GameTable> gameTable(Player user, @DestinationVariable String gameKey) throws Exception {
         // check if gameKey already exists
         Optional<GameTable> checkIfExists = gameTableRepository.findGameTableByGameKey(gameKey);
@@ -57,7 +43,8 @@ public class PlayerWebSocketController {
         else {
             Player player = playerRepository.findById(user.getId()).get();
             ArrayList<Player> players = new ArrayList<>(Arrays.asList(player));
-            GameTable gameTable = new GameTable(0.0, players, user.getBigBlindValue());
+            Deck deck = new Deck();
+            GameTable gameTable = new GameTable(0.0, players, user.getBigBlindValue(), deck);
             gameTable.setGameKey(gameKey);
             gameTableRepository.save(gameTable);
             player.setGame_table(gameTable);
@@ -65,7 +52,7 @@ public class PlayerWebSocketController {
             System.out.println("Created game (key: " + gameKey +". User: " + player.getUsername());
             return new ResponseEntity<>(gameTable, HttpStatus.OK);
         }
->>>>>>> develop
+
     }
 
     // JOIN GAME
@@ -102,23 +89,31 @@ public class PlayerWebSocketController {
     @MessageMapping("/action/game/{id}")
 //    @SendTo("client/greetings")
     public void handlePlayerAction(@DestinationVariable long id, PlayerAction playerAction) throws Exception {
-        String action = playerAction.getAction();
-        long playerId = playerAction.getPlayerId();
-        double betAmount = playerAction.getBetAmount();
+//        String action = playerAction.getAction();
+//        long playerId = playerAction.getPlayerId();
+//        double betAmount = playerAction.getBetAmount();
         // test
+        System.out.println(playerAction.toString());
         System.out.println("Player action: ");
-        System.out.println(id);
-        System.out.println(playerId);
-        System.out.println(action);
-        System.out.println(betAmount);
-<<<<<<< HEAD
+        System.out.println(playerAction.getAction());
+        System.out.println(playerAction.getBetAmount());
+        System.out.println(playerAction.getPlayerId());
+//        System.out.println(playerAction);
+//        System.out.println(id);
+//        System.out.println(playerId);
+//        System.out.println(action);
+//        System.out.println(betAmount);
 
         if(playerAction.getAction() == "deal") {
             GameTable table = gameTableRepository.getById(id);
             Dealer dealer = new Dealer(table);
             dealer.dealHoleCards();
-
+            gameTableRepository.save(table);
         }
+
+        System.out.println("Post deal route");
+        System.out.println(playerRepository.getById(1L).getHand());
+        System.out.println(playerRepository.getById(2L).getHand());
 
         if(playerAction.getAction() == "bet" || playerAction.getAction() == "call") {
             GameTable table = gameTableRepository.getById(id);
@@ -132,8 +127,6 @@ public class PlayerWebSocketController {
             }
             tempPlayer.bet(amount);
             table.addToPot(amount);
-
-
         }
 
         if(playerAction.getAction() == "fold") {
@@ -148,15 +141,7 @@ public class PlayerWebSocketController {
             }
             tempPlayer.fold();
         }
-        /*
- pass this data into the game logic...
-        List<Player> players= new ArrayList<>();
-//        List<Card> board= new ArrayList<>();
-//        SimpMessagingTemplate sender = new SimpMessagingTemplate();
-        sender.convertAndSend("/client/game/" + id, new GameTable(200.0, players, board, 5.0 ));
-*/
-=======
->>>>>>> develop
+
     }
 
 }

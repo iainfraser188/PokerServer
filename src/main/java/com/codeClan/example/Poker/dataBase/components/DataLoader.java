@@ -42,7 +42,7 @@ public class DataLoader implements ApplicationRunner {
         List<Player> players2 = new ArrayList<>(Arrays.asList(Stuart));
         GameTable table1 = new GameTable(0.00, players2, 100, deck);
 
-        GameTable table3 = new GameTable(0.0, new ArrayList<>(), 5);
+        GameTable table3 = new GameTable(0.0, new ArrayList<>(), 5, deck);
         table3.setGameKey("123");
 
         Alex.setGame_table(table1);
