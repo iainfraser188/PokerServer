@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -29,42 +30,53 @@ public class PlayerWebSocketController {
     // CREATE GAME
     @MessageMapping("/create/game/{gameKey}")
     @SendTo("/client/greetings")
-    public GameTable gameTable(Player user, @DestinationVariable String gameKey) throws Exception {
+    public ResponseEntity<GameTable> gameTable(Player user, @DestinationVariable String gameKey) throws Exception {
         // check if gameKey already exists
         Optional<GameTable> checkIfExists = gameTableRepository.findGameTableByGameKey(gameKey);
-        Player player = playerRepository.findById(user.getId()).get();
-        ArrayList<Player> players = new ArrayList<>(Arrays.asList(player));
-        GameTable gameTable = new GameTable(0.0, players, user.getBigBlindValue());
-        gameTable.setGameKey(gameKey);
-        gameTableRepository.save(gameTable);
-        player.setGame_table(gameTable);
-        playerRepository.save(player);
-        System.out.println("Created game (key: " + gameKey +". User: " + player.getUsername());
-        return gameTable;
+        if (checkIfExists.isPresent()) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        else {
+            Player player = playerRepository.findById(user.getId()).get();
+            ArrayList<Player> players = new ArrayList<>(Arrays.asList(player));
+            GameTable gameTable = new GameTable(0.0, players, user.getBigBlindValue());
+            gameTable.setGameKey(gameKey);
+            gameTableRepository.save(gameTable);
+            player.setGame_table(gameTable);
+            playerRepository.save(player);
+            System.out.println("Created game (key: " + gameKey +". User: " + player.getUsername());
+            return new ResponseEntity<>(gameTable, HttpStatus.OK);
+        }
     }
 
     // JOIN GAME
     @MessageMapping("/join/game/{gameKey}")
     @SendTo("/client/join")
-    public GameTable joinGameTable(@DestinationVariable String gameKey, Player user) throws Exception {
-        // check if table exists...
+    public ResponseEntity<GameTable> joinGameTable(@DestinationVariable String gameKey, Player user) throws Exception {
         System.out.println("INSIDE THE JOIN GAME METHOD"); // test
+        // check if table exists...
         Optional<GameTable> gameTableCheck = gameTableRepository.findGameTableByGameKey(gameKey);
         if (gameTableCheck.isPresent()) {
             Player player = playerRepository.findById(user.getId()).get();
             GameTable gameTable = gameTableCheck.get();
-            gameTable.addPlayer(player);
+            // check player is not already part of the list
+            List<Player> currentPlayers = gameTable.getPlayers();
+            ArrayList<Long> playerIds = new ArrayList<>();
+            currentPlayers.forEach(currentPlayer -> playerIds.add(currentPlayer.getId()));
+            if (!playerIds.contains(user.getId())) {
+                System.out.println("Player not already at the table...");
+                gameTable.addPlayer(player);
+            }
             gameTableRepository.save(gameTable);
             player.setGame_table(gameTable);
             playerRepository.save(player);
             System.out.println("Join game (key: " + gameKey +". User: " + player.getUsername());
-            return gameTable;
+            return new ResponseEntity<>(gameTable, HttpStatus.OK);
         }
         // if no table is found
         else {
             System.out.println("table is not found");
-//            return null;
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
