@@ -42,7 +42,7 @@ public class PlayerWebSocketController {
         System.out.println("Created game (key: " + gameKey +". User: " + player.getUsername());
         return gameTable;
     }
-    
+
 
     // JOIN GAME
     @MessageMapping("/join/game/{gameKey}")
