@@ -5,11 +5,13 @@ public class PlayerAction {
     private String action;
     private long playerId;
     private double betAmount;
+    private String gameTableKey;
 
-    public PlayerAction(String action, long playerId, double betAmount) {
+    public PlayerAction(String action, long playerId, double betAmount, String gameTableKey) {
         this.action = action;
         this.playerId = playerId;
         this.betAmount = betAmount;
+        this.gameTableKey = gameTableKey;
     }
 
     public String getAction() {
@@ -34,5 +36,13 @@ public class PlayerAction {
 
     public void setBetAmount(double betAmount) {
         this.betAmount = betAmount;
+    }
+
+    public String getGameTableKey() {
+        return gameTableKey;
+    }
+
+    public void setGameTableKey(String gameTableKey) {
+        this.gameTableKey = gameTableKey;
     }
 }

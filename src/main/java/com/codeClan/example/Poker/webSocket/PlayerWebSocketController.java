@@ -2,8 +2,10 @@ package com.codeClan.example.Poker.webSocket;
 
 import com.codeClan.example.Poker.dataBase.repositories.GameTableRepository;
 import com.codeClan.example.Poker.dataBase.repositories.PlayerRepository;
+import com.codeClan.example.Poker.game.models.Deck;
 import com.codeClan.example.Poker.game.models.GameTable;
 import com.codeClan.example.Poker.game.models.Player;
+import com.codeClan.example.Poker.game.models.game.Dealer;
 import com.codeClan.example.Poker.webSocket.models.PlayerAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -32,7 +35,8 @@ public class PlayerWebSocketController {
         Player player = playerRepository.findById(user.getId()).get();
         System.out.println("player" + player);
         ArrayList<Player> players = new ArrayList<Player>(Arrays.asList(player));
-        GameTable gameTable = new GameTable(0.0, players, user.getBigBlindValue());
+        Deck deck = new Deck();
+        GameTable gameTable = new GameTable(0.0, players, user.getBigBlindValue(), deck);
 //        System.out.println("gametable" + gameTable.getId());
         gameTableRepository.save(gameTable);
         player.setGame_table(gameTable);
@@ -66,6 +70,38 @@ public class PlayerWebSocketController {
         System.out.println(playerId);
         System.out.println(action);
         System.out.println(betAmount);
+
+        if(playerAction.getAction() == "deal") {
+            GameTable table = gameTableRepository.getById(id);
+            Dealer dealer = new Dealer(table);
+            dealer.dealHoleCards();
+        }
+
+        if(playerAction.getAction() == "bet" || playerAction.getAction() == "call") {
+            GameTable table = gameTableRepository.getById(id);
+            List<Player> players = table.getPlayers();
+            Player tempPlayer = new Player();
+            double amount = playerAction.getBetAmount();
+            for(Player player : players) {
+                if(player.isActive()) {
+                    tempPlayer = player;
+                }
+            }
+            tempPlayer.bet(amount);
+        }
+
+        if(playerAction.getAction() == "fold") {
+            GameTable table = gameTableRepository.getById(id);
+            List<Player> players = table.getPlayers();
+            Player tempPlayer = new Player();
+            double amount = playerAction.getBetAmount();
+            for(Player player : players) {
+                if(player.isActive()) {
+                    tempPlayer = player;
+                }
+            }
+            tempPlayer.fold();
+        }
         /*
  pass this data into the game logic...
         List<Player> players= new ArrayList<>();

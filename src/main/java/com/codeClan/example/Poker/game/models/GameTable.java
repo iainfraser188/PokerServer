@@ -34,19 +34,23 @@ public class GameTable {
     @Column(name = "small_blind")
     private double smallBlind;
 
+    @Column(name = "deck")
+    private Deck deck;
+
 //    public GameTable() {
 //    }
 
     public GameTable() {
     }
 
-    public GameTable(double pot, List<Player> players, double bigBlind) {
+    public GameTable(double pot, List<Player> players, double bigBlind, Deck deck) {
 
         this.pot = pot;
         this.players = players;
         this.board = new ArrayList<>();
         this.bigBlind = bigBlind;
         this.smallBlind = bigBlind / 2;
+        this.deck = deck;
     }
 
     public Long getId() {
@@ -115,6 +119,14 @@ public class GameTable {
 
     public void addPlayer(Player player) {
         this.players.add(player);
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
     }
 
     // GAME METHODS

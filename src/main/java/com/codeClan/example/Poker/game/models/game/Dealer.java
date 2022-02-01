@@ -10,12 +10,12 @@ import java.util.List;
 public class Dealer {
 
     private List<Player> players;
-    private Deck deck;
     private GameTable gameTable;
+    private Deck deck;
 
-    public Dealer(GameTable gameTable, Deck deck) {
+    public Dealer(GameTable gameTable) {
         this.gameTable = gameTable;
-        this.deck = deck;
+        this.deck = gameTable.getDeck();
     }
 
     public Dealer() {
