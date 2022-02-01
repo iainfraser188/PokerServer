@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PostFlopBetting {
+public class PostFlopBetting implements IBetting{
 
 
     private List<Player> players;

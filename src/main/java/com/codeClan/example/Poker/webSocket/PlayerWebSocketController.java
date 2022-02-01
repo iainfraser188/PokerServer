@@ -6,6 +6,7 @@ import com.codeClan.example.Poker.game.models.Deck;
 import com.codeClan.example.Poker.game.models.GameTable;
 import com.codeClan.example.Poker.game.models.Player;
 import com.codeClan.example.Poker.game.models.game.Dealer;
+import com.codeClan.example.Poker.game.models.game.bettingRound.PreFlopBetting;
 import com.codeClan.example.Poker.webSocket.models.PlayerAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -75,6 +76,7 @@ public class PlayerWebSocketController {
             GameTable table = gameTableRepository.getById(id);
             Dealer dealer = new Dealer(table);
             dealer.dealHoleCards();
+
         }
 
         if(playerAction.getAction() == "bet" || playerAction.getAction() == "call") {
@@ -88,6 +90,9 @@ public class PlayerWebSocketController {
                 }
             }
             tempPlayer.bet(amount);
+            table.addToPot(amount);
+
+
         }
 
         if(playerAction.getAction() == "fold") {

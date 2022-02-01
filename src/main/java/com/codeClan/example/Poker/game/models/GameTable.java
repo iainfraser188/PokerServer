@@ -34,7 +34,7 @@ public class GameTable {
     @Column(name = "small_blind")
     private double smallBlind;
 
-    @Column(name = "deck")
+    @Transient
     private Deck deck;
 
 //    public GameTable() {

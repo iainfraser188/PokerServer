@@ -4,7 +4,7 @@ import com.codeClan.example.Poker.game.models.Player;
 
 import java.util.List;
 
-public class AltPreFlopBetting {
+public class AltPreFlopBetting implements IBetting {
 
     private List<Player> players;
     private double pot;

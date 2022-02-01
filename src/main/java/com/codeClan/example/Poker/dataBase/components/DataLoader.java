@@ -2,6 +2,7 @@ package com.codeClan.example.Poker.dataBase.components;
 
 import com.codeClan.example.Poker.dataBase.repositories.GameTableRepository;
 import com.codeClan.example.Poker.dataBase.repositories.PlayerRepository;
+import com.codeClan.example.Poker.game.models.Deck;
 import com.codeClan.example.Poker.game.models.GameTable;
 import com.codeClan.example.Poker.game.models.Player;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,13 @@ public class DataLoader implements ApplicationRunner {
 
         Player Stuart = new Player("stuart", 1000, "Stuart123", "2345");
 
+        Deck deck = new Deck();
+
         List<Player> players1 = new ArrayList<>(Arrays.asList(Alex));
-        GameTable gameTable2 = new GameTable(0.0, players1, 5.0);
+        GameTable gameTable2 = new GameTable(0.0, players1, 5.0, deck);
 
         List<Player> players2 = new ArrayList<>(Arrays.asList(Stuart));
-        GameTable table1 = new GameTable(0.00, players2, 100);
+        GameTable table1 = new GameTable(0.00, players2, 100, deck);
 
         Alex.setGame_table(table1);
         Stuart.setGame_table(gameTable2);
