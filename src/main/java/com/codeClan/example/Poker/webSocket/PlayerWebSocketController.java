@@ -6,6 +6,7 @@ import com.codeClan.example.Poker.game.models.GameTable;
 import com.codeClan.example.Poker.game.models.Player;
 import com.codeClan.example.Poker.webSocket.models.PlayerAction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -25,33 +26,43 @@ public class PlayerWebSocketController {
     GameTableRepository gameTableRepository;
 
     // CREATE GAME
-    @MessageMapping("/create/game/{id}")
+    @MessageMapping("/create/game/{gameKey}")
     @SendTo("/client/greetings")
-    public GameTable gameTable(Player user, @DestinationVariable long id) throws Exception {
-        // call user repository
+    public GameTable gameTable(Player user, @DestinationVariable String gameKey) throws Exception {
         Player player = playerRepository.findById(user.getId()).get();
-        System.out.println("player" + player);
-        ArrayList<Player> players = new ArrayList<Player>(Arrays.asList(player));
+        ArrayList<Player> players = new ArrayList<>(Arrays.asList(player));
         GameTable gameTable = new GameTable(0.0, players, user.getBigBlindValue());
-//        System.out.println("gametable" + gameTable.getId());
+        gameTable.setGameKey(gameKey);
         gameTableRepository.save(gameTable);
         player.setGame_table(gameTable);
         playerRepository.save(player);
-        System.out.println("created game. User: " + player.getUsername() + ". GameTable: " + gameTable.getId());
+        System.out.println("Created game (key: " + gameKey +". User: " + player.getUsername());
         return gameTable;
     }
 
     // JOIN GAME
-    @MessageMapping("/game/{id}")
-    @SendTo("/client/greetings")
-    public GameTable joinGameTable(Player user, @DestinationVariable long id) throws Exception {
-        // call user repository
-        Optional<Player> player = playerRepository.findById(user.getId());
-        System.out.println(player);
-        Optional<GameTable> gameTable = gameTableRepository.findById(id);
-        gameTable.get().addPlayer(player.get());
-        System.out.println("Joining game. User: " + player.get().getUsername() + ". GameTable: " + gameTable.get().getId());
-        return gameTable.get();
+    @MessageMapping("/join/game/{gameKey}")
+    @SendTo("/client/join")
+    public GameTable joinGameTable(@DestinationVariable String gameKey, Player user) throws Exception {
+        // check if table exists...
+        System.out.println("INSIDE THE JOIN GAME METHOD"); // test
+        Optional<GameTable> gameTableCheck = gameTableRepository.findGameTableByGameKey(gameKey);
+        if (gameTableCheck.isPresent()) {
+            Player player = playerRepository.findById(user.getId()).get();
+            GameTable gameTable = gameTableCheck.get();
+            gameTable.addPlayer(player);
+            gameTableRepository.save(gameTable);
+            player.setGame_table(gameTable);
+            playerRepository.save(player);
+            System.out.println("Join game (key: " + gameKey +". User: " + player.getUsername());
+            return gameTable;
+        }
+        // if no table is found
+        else {
+            System.out.println("table is not found");
+//            return null;
+            return null;
+        }
     }
 
     @MessageMapping("/action/game/{id}")
@@ -66,22 +77,6 @@ public class PlayerWebSocketController {
         System.out.println(playerId);
         System.out.println(action);
         System.out.println(betAmount);
-        /*
- pass this data into the game logic...
-        List<Player> players= new ArrayList<>();
-//        List<Card> board= new ArrayList<>();
-//        SimpMessagingTemplate sender = new SimpMessagingTemplate();
-        sender.convertAndSend("/client/game/" + id, new GameTable(200.0, players, board, 5.0 ));
-*/
     }
 
-
-
 }
-
-
-//    @MessageMapping("/hello")
-//    @SendTo("/topic/greetings")
-//    public Greeting greeting(HelloMessage message) throws Exception {
-//        return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
-//    }

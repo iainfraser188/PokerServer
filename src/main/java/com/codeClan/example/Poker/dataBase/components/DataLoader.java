@@ -29,7 +29,7 @@ public class DataLoader implements ApplicationRunner {
 
         Player Iain = new Player("iain", 1000, "Iain123", "1234");
 
-        Player Alex = new Player("alex", 1000, "Alex123", "4321");
+        Player Alex = new Player("alex", 1000, "A", "1");
 
         Player Stuart = new Player("stuart", 1000, "Stuart123", "2345");
 
@@ -39,15 +39,23 @@ public class DataLoader implements ApplicationRunner {
         List<Player> players2 = new ArrayList<>(Arrays.asList(Stuart));
         GameTable table1 = new GameTable(0.00, players2, 100);
 
+        GameTable table3 = new GameTable(0.0, new ArrayList<>(), 5);
+        table3.setGameKey("123");
+
         Alex.setGame_table(table1);
         Stuart.setGame_table(gameTable2);
 
         gameTableRepository.save(gameTable2);
         gameTableRepository.save(table1);
+        gameTableRepository.save(table3);
 
         playerRepository.save(Iain);
         playerRepository.save(Alex);
         playerRepository.save(Stuart);
 
+
+
     }
+
+
 }
