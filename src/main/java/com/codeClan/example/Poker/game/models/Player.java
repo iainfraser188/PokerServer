@@ -86,8 +86,8 @@ public class Player {
         return game_table;
     }
 
-    public void setGame_table(GameTable game_table) {
-        this.game_table = game_table;
+    public void setGame_table(GameTable gameTable) {
+        this.game_table = gameTable;
     }
 
     public boolean isFolded() {

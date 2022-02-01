@@ -39,15 +39,23 @@ public class DataLoader implements ApplicationRunner {
         List<Player> players2 = new ArrayList<>(Arrays.asList(Stuart));
         GameTable table1 = new GameTable(0.00, players2, 100);
 
+        GameTable table3 = new GameTable(0.0, new ArrayList<>(), 5);
+        table3.setGameKey("123");
+
         Alex.setGame_table(table1);
         Stuart.setGame_table(gameTable2);
 
         gameTableRepository.save(gameTable2);
         gameTableRepository.save(table1);
+        gameTableRepository.save(table3);
 
         playerRepository.save(Iain);
         playerRepository.save(Alex);
         playerRepository.save(Stuart);
 
+
+
     }
+
+
 }

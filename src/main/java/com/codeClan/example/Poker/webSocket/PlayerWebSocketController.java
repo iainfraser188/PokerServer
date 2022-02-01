@@ -6,6 +6,7 @@ import com.codeClan.example.Poker.game.models.GameTable;
 import com.codeClan.example.Poker.game.models.Player;
 import com.codeClan.example.Poker.webSocket.models.PlayerAction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -40,21 +41,26 @@ public class PlayerWebSocketController {
     }
 
     // JOIN GAME
-    @MessageMapping("/game/{gameKey}")
-    @SendTo("/client/greetings")
-    public Optional<GameTable> joinGameTable(Player user, @DestinationVariable String gameKey) throws Exception {
+    @MessageMapping("/join/game/{gameKey}")
+    @SendTo("/client/join")
+    public GameTable joinGameTable(@DestinationVariable String gameKey, Player user) throws Exception {
         // check if table exists...
+        System.out.println("INSIDE THE JOIN GAME METHOD"); // test
         Optional<GameTable> gameTableCheck = gameTableRepository.findGameTableByGameKey(gameKey);
         if (gameTableCheck.isPresent()) {
             Player player = playerRepository.findById(user.getId()).get();
             GameTable gameTable = gameTableCheck.get();
             gameTable.addPlayer(player);
             gameTableRepository.save(gameTable);
+            player.setGame_table(gameTable);
             playerRepository.save(player);
-            return Optional.of(gameTable);
+            System.out.println("Join game (key: " + gameKey +". User: " + player.getUsername());
+            return gameTable;
         }
         // if no table is found
         else {
+            System.out.println("table is not found");
+//            return null;
             return null;
         }
     }
