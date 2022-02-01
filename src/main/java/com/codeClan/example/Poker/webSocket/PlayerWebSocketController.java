@@ -7,6 +7,7 @@ import com.codeClan.example.Poker.game.models.Player;
 import com.codeClan.example.Poker.webSocket.models.PlayerAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -29,6 +30,8 @@ public class PlayerWebSocketController {
     @MessageMapping("/create/game/{gameKey}")
     @SendTo("/client/greetings")
     public GameTable gameTable(Player user, @DestinationVariable String gameKey) throws Exception {
+        // check if gameKey already exists
+        Optional<GameTable> checkIfExists = gameTableRepository.findGameTableByGameKey(gameKey);
         Player player = playerRepository.findById(user.getId()).get();
         ArrayList<Player> players = new ArrayList<>(Arrays.asList(player));
         GameTable gameTable = new GameTable(0.0, players, user.getBigBlindValue());
