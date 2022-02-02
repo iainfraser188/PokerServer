@@ -123,7 +123,7 @@ public class PlayerWebSocketController {
             }
             holeCards.put(player.getId(), handData);
         }
-        holeCards.put(2L, new ArrayList<>(Arrays.asList("SPADES", "TWO", "DIAMOND", "TWO")));
+//        holeCards.put(2L, new ArrayList<>(Arrays.asList("SPADES", "TWO", "DIAMONDS", "TWO")));
         System.out.println(holeCards);
         return new ResponseEntity<>(holeCards, HttpStatus.OK);
     }
