@@ -1,7 +1,9 @@
 package com.codeClan.example.Poker.webSocket;
 
+import com.codeClan.example.Poker.dataBase.repositories.CardRepository;
 import com.codeClan.example.Poker.dataBase.repositories.GameTableRepository;
 import com.codeClan.example.Poker.dataBase.repositories.PlayerRepository;
+import com.codeClan.example.Poker.game.models.Card;
 import com.codeClan.example.Poker.game.models.Deck;
 import com.codeClan.example.Poker.game.models.GameTable;
 import com.codeClan.example.Poker.game.models.Player;
@@ -16,10 +18,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class PlayerWebSocketController {
@@ -29,6 +28,9 @@ public class PlayerWebSocketController {
 
     @Autowired
     GameTableRepository gameTableRepository;
+
+    @Autowired
+    CardRepository cardRepository;
 
     // CREATE GAME
     @MessageMapping("/create/game/{gameKey}")
@@ -86,37 +88,55 @@ public class PlayerWebSocketController {
         }
     }
 
-    @MessageMapping("/action/game/{id}")
-//    @SendTo("client/greetings")
-    public void handlePlayerAction(@DestinationVariable long id, PlayerAction playerAction) throws Exception {
-//        String action = playerAction.getAction();
-//        long playerId = playerAction.getPlayerId();
-//        double betAmount = playerAction.getBetAmount();
-        // test
-        System.out.println(playerAction.toString());
-        System.out.println("Player action: ");
-        System.out.println(playerAction.getAction());
-        System.out.println(playerAction.getBetAmount());
-        System.out.println(playerAction.getPlayerId());
-//        System.out.println(playerAction);
-//        System.out.println(id);
-//        System.out.println(playerId);
-//        System.out.println(action);
-//        System.out.println(betAmount);
+    @MessageMapping("/action/game/{gameKey}/deal")
+    @SendTo("/client/deal")
+    public ResponseEntity<HashMap<Long, List<String>>> handleDealingHoleCards(@DestinationVariable String gameKey, PlayerAction playerAction) {
 
-        if(playerAction.getAction() == "deal") {
-            GameTable table = gameTableRepository.getById(id);
+        String action = playerAction.getAction();
+
+        // deal
+        if(action.equalsIgnoreCase("deal")) {
+            System.out.println("IN method");
+            GameTable table = gameTableRepository.findGameTableByGameKey(gameKey).get();
+            System.out.println("table key: " + table.getGameKey());
             Dealer dealer = new Dealer(table);
             dealer.dealHoleCards();
             gameTableRepository.save(table);
+            for (Player player : table.getPlayers()) {
+                playerRepository.save(player);
+                for (Card card : player.getHand()) {
+                    card.setPlayer(player);
+                    cardRepository.save(card);
+                    // test
+                    System.out.println(player.getUsername() + " has " + card.getCardValue() + card.getCardSuitType());
+                }
+            }
+            gameTableRepository.save(table);
         }
+        HashMap<Long, List<String>> holeCards = new HashMap<>();
+        List<Player> gameTablesPlayers = gameTableRepository.findGameTableByGameKey(gameKey).get().getPlayers();
+        for (Player player : gameTablesPlayers) {
+            List<String> handData = new ArrayList<>();
+            for (int i=0; i<2; i++) {
+                handData.add(player.getHand().get(i).getCardSuitType().toString());
+                handData.add(player.getHand().get(i).getCardValue().toString());
+            }
+            holeCards.put(player.getId(), handData);
+        }
+//        holeCards.put(2L, new ArrayList<>(Arrays.asList("SPADES", "TWO", "DIAMONDS", "TWO")));
+        System.out.println(holeCards);
+        return new ResponseEntity<>(holeCards, HttpStatus.OK);
+    }
 
-        System.out.println("Post deal route");
-        System.out.println(playerRepository.getById(1L).getHand());
-        System.out.println(playerRepository.getById(2L).getHand());
+    @MessageMapping("/action/game/{id}")
+    @SendTo("/client/greetings")
+    public ResponseEntity<GameTable> handlePlayerAction(@DestinationVariable String id, PlayerAction playerAction) throws Exception {
 
-        if(playerAction.getAction() == "bet" || playerAction.getAction() == "call") {
-            GameTable table = gameTableRepository.getById(id);
+        String action = playerAction.getAction();
+
+        // bet & call
+        if(action.equalsIgnoreCase("bet") || action.equalsIgnoreCase("call")) {
+            GameTable table = gameTableRepository.findGameTableByGameKey(id).get();
             List<Player> players = table.getPlayers();
             Player tempPlayer = new Player();
             double amount = playerAction.getBetAmount();
@@ -127,10 +147,13 @@ public class PlayerWebSocketController {
             }
             tempPlayer.bet(amount);
             table.addToPot(amount);
+            gameTableRepository.save(table);
+            return new ResponseEntity<>(table, HttpStatus.OK);
         }
 
-        if(playerAction.getAction() == "fold") {
-            GameTable table = gameTableRepository.getById(id);
+        // fold
+        else if(action.equalsIgnoreCase("fold")) {
+            GameTable table = gameTableRepository.findGameTableByGameKey(id).get();
             List<Player> players = table.getPlayers();
             Player tempPlayer = new Player();
             double amount = playerAction.getBetAmount();
@@ -140,8 +163,10 @@ public class PlayerWebSocketController {
                 }
             }
             tempPlayer.fold();
+            gameTableRepository.save(table);
+            return new ResponseEntity<>(table, HttpStatus.OK);
         }
-
+        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
