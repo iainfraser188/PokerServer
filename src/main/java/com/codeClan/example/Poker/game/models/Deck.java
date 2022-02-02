@@ -17,7 +17,7 @@ public class Deck {
     public void resetDeck() {
         List<Card> newDeck = new ArrayList<>();
         for (int i=0; i<CardSuitType.values().length; i++) {
-            for (int j = 0; j< CardFace.values().length - 1; j++) {
+            for (int j=0; j< CardFace.values().length-1; j++) {
                 Card tempCard = new Card(CardSuitType.values()[i], CardFace.values()[j]);
                 newDeck.add(tempCard);
             }

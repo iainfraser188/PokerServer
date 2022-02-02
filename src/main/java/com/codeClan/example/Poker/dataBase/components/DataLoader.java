@@ -54,7 +54,7 @@ public class DataLoader implements ApplicationRunner {
         List<Player> players1 = new ArrayList<>(Arrays.asList(Alex));
         GameTable gameTable2 = new GameTable(0.0, players1, 5.0, deck);
 
-        List<Player> players2 = new ArrayList<>(Arrays.asList(Stuart, Iain));
+        List<Player> players2 = new ArrayList<>(Arrays.asList(Stuart));
         GameTable table1 = new GameTable(0.00, players2, 100, deck);
 
         GameTable table3 = new GameTable(0.0, new ArrayList<>(), 5, deck);
@@ -71,17 +71,20 @@ public class DataLoader implements ApplicationRunner {
         playerRepository.save(Alex);
         playerRepository.save(Stuart);
 
-        Dealer dealer = new Dealer(table1);
+//        Dealer dealer = new Dealer(table1);
+//
+//        dealer.dealHoleCards();
+//
+//        gameTableRepository.save(table1);
+//        for (Player player : table1.getPlayers()) {
+//            playerRepository.save(player);
+//            for (Card card : player.getHand()) {
+//                cardRepository.save(card);
+//            }
+//        }
 
-        dealer.dealHoleCards();
 
-        gameTableRepository.save(table1);
-        for (Player player : table1.getPlayers()) {
-            playerRepository.save(player);
-            for (Card card : player.getHand()) {
-                cardRepository.save(card);
-            }
-        }
+
 //        gameTableRepository.save(table1);
 
 

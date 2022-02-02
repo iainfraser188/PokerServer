@@ -10,12 +10,16 @@ import java.util.List;
 public class Dealer {
 
     private List<Player> players;
+
     private GameTable gameTable;
+
     private Deck deck;
 
     public Dealer(GameTable gameTable) {
         this.gameTable = gameTable;
-        this.deck = gameTable.getDeck();
+//        this.deck = gameTable.getDeck();
+        Deck deck = new Deck();
+        this.deck = deck;
     }
 
     public Dealer() {
@@ -23,8 +27,8 @@ public class Dealer {
 
     public void dealHoleCards() {
         for(int i = 0; i < this.gameTable.getPlayers().size(); i++) {
-            Card card1 = deck.dealCard();
-            Card card2 = deck.dealCard();
+            Card card1 = this.deck.dealCard();
+            Card card2 = this.deck.dealCard();
             this.gameTable.getPlayers().get(i).addCard(card1);
             this.gameTable.getPlayers().get(i).addCard(card2);
             card1.setPlayer(this.gameTable.getPlayers().get(i));
